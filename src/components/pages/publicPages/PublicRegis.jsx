@@ -138,9 +138,9 @@ export default function PublicRegis() {
   function validarFormulario(formData) {
     // Validar nombre y apellido solo letras
     
-    if (!formData.role || !["cliente", "empleado"].includes(formData.role.toLowerCase())) {
+    /* if (!formData.role || !["cliente", "empleado"].includes(formData.role.toLowerCase())) {
       return "Debes Seleccionar Un Rol";
-    }
+    } */
 
 
     if (!/^[a-zA-ZáéíóúÁÉÍÓÚñÑ ]+$/.test(formData.nombre)) {

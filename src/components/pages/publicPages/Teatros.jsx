@@ -22,6 +22,7 @@ import CloseIcon from "@mui/icons-material/Close";
 import SendIcon from "@mui/icons-material/Send";
 import { enviarMensaje } from "../../../services/ClienteServices";
 import {
+  SrcImagen,
   getSalasId,
   getSalas,
   getJefeId,
@@ -178,7 +179,7 @@ export default function Teatros() {
             <Grid item xs={12} sm={6}>
               <img
                 style={{ boxShadow: "0px 10px 20px rgba(0, 0, 0, 0.5)" }}
-                src={selectTeatro?.imagen}
+                src={SrcImagen(selectTeatro?.imagen)}
                 width="100%"
                 height="100%"
               />
@@ -253,7 +254,7 @@ export default function Teatros() {
                   setOpenTeatro(true);
                   obtenerJefe(sala.id);
                 }}
-                src={sala?.imagen}
+                src={SrcImagen(sala?.imagen)}
                 alt={`Imagen de ${sala.nombre}`}
                 loading="lazy"
               />

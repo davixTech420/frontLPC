@@ -198,10 +198,10 @@ export default function ModernIndexPage() {
                         <Box
                           component="img"
                           src={
-                            SrcImagen(currentShow.imagen) ||
+                            SrcImagen(currentShow?.imagen) ||
                             "/placeholder.svg?height=300&width=400"
                           }
-                          alt={currentShow.titulo}
+                        alt={currentShow?.titulo}
                           sx={{
                             width: "100%",
                             height: 300,
@@ -232,10 +232,10 @@ export default function ModernIndexPage() {
                         component="h1"
                         sx={{ color: "white", fontWeight: "bold", mb: 1 }}
                       >
-                        {currentShow.titulo}
+                        {currentShow?.titulo}
                       </Typography>
                       <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1 }}>
-                        {currentShow.tags &&
+                        {currentShow?.tags &&
                           currentShow.tags.map((tag, index) => (
                             <Chip
                               key={index}
@@ -262,7 +262,7 @@ export default function ModernIndexPage() {
                           sx={{ marginRight: 1, color: "primary.main" }}
                         />
                         <Typography variant="body1">
-                          {formatDate(currentShow.fechaPresentar)}
+                          {formatDate(currentShow?.fechaPresentar)}
                         </Typography>
                       </Box>
                     </Grid>
@@ -272,7 +272,7 @@ export default function ModernIndexPage() {
                           sx={{ marginRight: 1, color: "primary.main" }}
                         />
                         <Typography variant="body1">
-                          {formatTime(currentShow.fechaPresentar)}
+                          {formatTime(currentShow?.fechaPresentar)}
                         </Typography>
                       </Box>
                     </Grid>
@@ -282,7 +282,7 @@ export default function ModernIndexPage() {
                           sx={{ marginRight: 1, color: "primary.main" }}
                         />
                         <Typography variant="body1">
-                          {currentShow.sala ? currentShow.sala.nombre : "TBA"}
+                          {currentShow?.sala ? currentShow.sala.nombre : "TBA"}
                         </Typography>
                       </Box>
                     </Grid>
