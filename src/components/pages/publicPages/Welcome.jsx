@@ -11,7 +11,6 @@ import {
   Typography,
   Button,
   IconButton,
-  TextField,
   Chip,
   Avatar,
 } from "@mui/material";
@@ -273,7 +272,8 @@ obteSala();
                     <Grid item xs={12} sm={4}>
                       <Box sx={{ display: "flex", alignItems: "center" }}>
                         <CalendarToday
-                          sx={{ marginRight: 1, color: "primary.main" }}
+                         className="colorPrimaIcon"
+                          sx={{ marginRight: 1}}
                         />
                         <Typography variant="body1">
                           {formatDate(currentShow?.fechaPresentar)}
@@ -283,7 +283,8 @@ obteSala();
                     <Grid item xs={12} sm={4}>
                       <Box sx={{ display: "flex", alignItems: "center" }}>
                         <AccessTime
-                          sx={{ marginRight: 1, color: "primary.main" }}
+                        className="colorPrimaIcon"
+                          sx={{ marginRight: 1 }}
                         />
                         <Typography variant="body1">
                           {currentShow?.horaInicio}
@@ -293,7 +294,8 @@ obteSala();
                     <Grid item xs={12} sm={4}>
                       <Box sx={{ display: "flex", alignItems: "center" }}>
                         <LocationOn
-                          sx={{ marginRight: 1, color: "primary.main" }}
+                         className="colorPrimaIcon"
+                          sx={{ marginRight: 1 }}
                         />
                         <Typography variant="body1">
                           {currentShow?.sala ? currentShow.sala.direccion : "Bogota D.C"}
@@ -322,8 +324,8 @@ obteSala();
                       <Button
                         variant="contained"
                         size="large"
+                        className="botnWelcome"
                         sx={{
-                          backgroundColor: "primary.main",
                           "&:hover": {
                             backgroundColor: "primary.dark",
                           },
@@ -337,6 +339,7 @@ obteSala();
                     </motion.div>
                     <IconButton
                       onClick={nextShowHandler}
+                       className="colorPrimaIcon"
                       sx={{ color: "primary.main" }}
                     >
                       <ChevronRight />
@@ -401,7 +404,7 @@ obteSala();
                     Agenda Tu Show Y Ve Los Shos Cercanos
                   </Typography>
                  
-                  <Button fullWidth variant="contained" sx={{ mt: 2 }} onClick={() => window.location.href = '/loginPublic'}>
+                  <Button className="botnWelcome" fullWidth variant="contained" sx={{ mt: 2 }} onClick={() => window.location.href = '/loginPublic'}>
                     Login
                   </Button>
                 </CardContent>

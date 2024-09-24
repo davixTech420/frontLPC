@@ -247,7 +247,8 @@ export default function PublicRegis() {
                   id="nombre"
                   label="Nombre"
                   autoFocus
-                  variant="filled"
+                  variant="standard"
+                  focused
                 />
               </Grid>
               <Grid item xs={12} sm={6}>
@@ -267,23 +268,30 @@ export default function PublicRegis() {
                   label="Apellido"
                   name="apellido"
                   autoComplete="family-name"
-                  variant="filled"
+                 variant="standard"
+                  focused
                 />
               </Grid>
 
               <Grid item xs={12} sm={6}>
-                <FormControl variant="filled" sx={{ width: "100%", }}>
-                  <InputLabel id="demo-simple-select-filled-label">
+                <FormControl
+                variant="standard"
+                focused
+                   sx={{ width: "100%", }}>
+                   <InputLabel id="demo-simple-select-filled-label">
                     Tipo De Identificacion
-                  </InputLabel>
+                  </InputLabel> 
                   <Select
                   required
                     value={formData.tipIdentidad}
                     onChange={(e) =>
                       setFormData({ ...formData, tipIdentidad: e.target.value })
                     }
-                    labelId="demo-simple-select-filled-label"
+                    
+                    
                     id="demo-simple-select-filled"
+                   sx={{ width: "100%" }}
+
                   >
                     <MenuItem value="">
                       <em>None</em>
@@ -306,6 +314,7 @@ export default function PublicRegis() {
                 }}
                   required
                   fullWidth
+                 
                   value={formData.identificacion}
                   onChange={(e) =>
                     setFormData({ ...formData, identificacion: e.target.value })
@@ -314,8 +323,10 @@ export default function PublicRegis() {
                   label="Identificacion"
                   name="identificacion"
                   autoComplete="family-name"
-                  variant="filled"
+                  variant="standard"
+                  focused
                 />
+              
               </Grid>
 
               <Grid item xs={12}>
@@ -328,10 +339,12 @@ export default function PublicRegis() {
                     setFormData({ ...formData, email: e.target.value })
                   }
                   id="email"
-                  variant="filled"
+                  variant="standard"
+                  focused
                   label="Email"
                   name="email"
                   autoComplete="email"
+                  
                 />
               </Grid>
               <Grid item xs={12}>
@@ -351,7 +364,8 @@ export default function PublicRegis() {
                     setFormData({ ...formData, telefono: e.target.value })
                   }
                   id="telefono"
-                  variant="filled"
+                 variant="standard"
+                  focused
                   label="Telefono"
                   name="telefono"
                   autoComplete="family-name"
@@ -359,7 +373,8 @@ export default function PublicRegis() {
               </Grid>
               <Grid item xs={12}>
               <TextField
-                  variant="filled"
+                 variant="standard"
+                  focused
                   required
                   fullWidth
                   name="password"

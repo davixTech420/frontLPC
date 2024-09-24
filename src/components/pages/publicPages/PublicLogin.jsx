@@ -183,7 +183,8 @@ const TheaterVolcanicLogin = () => {
                   fullWidth
                   value={formData.email}
                   onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                  variant="filled"
+                  variant="standard"
+                  focused
                   label="Email"
                   name="email"
                   autoComplete="email"
@@ -191,7 +192,8 @@ const TheaterVolcanicLogin = () => {
               </Grid>
               <Grid item xs={12}>
                 <TextField
-                  variant="filled"
+                  variant="standard"
+                  focused
                   required
                   fullWidth
                   name="password"
@@ -207,7 +209,7 @@ const TheaterVolcanicLogin = () => {
                           edge="end"
                         >
                           {showPassword ? <VisibilityOff /> : <Visibility />}
-                        </IconButton>
+                        </IconButton> 
                       </InputAdornment>
                     ),
                   }}
