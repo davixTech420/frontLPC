@@ -308,9 +308,9 @@ const VistaTabla = () => {
                   >
                     Crear
                   </Button>
-                  <Button className="btn-admin-panel"   variant="contained" sx={{ marginInline: 2 }}>
+                  {/* <Button className="btn-admin-panel"   variant="contained" sx={{ marginInline: 2 }}>
                     Reporte
-                  </Button>
+                  </Button> */}
                   <TextField
                     id="standard-basic"
                     label="Buscar"

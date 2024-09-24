@@ -27,26 +27,26 @@ function nav(path){
       <Container maxWidth="md">
         <Grid container spacing={2}>
           <Grid item xs={12} md={6}>
-            <Typography variant="h6" color="primary">
+            <Typography variant="h6" color="white">
               LPC
             </Typography>
             <Typography variant="body2">
               LPC Los Mejores En Logistica Buscas Teatros Disponibles Para Tu Show  Y gente Tecnica Y Capacitada 
             </Typography>
             <Box sx={{ mt: 2 }}>
-              <IconButton aria-label="Facebook" sx={{ color: '#3b5999' }}>
+              <IconButton aria-label="Facebook" sx={{ color: 'white' }}>
                 <Facebook />
               </IconButton>
-              <IconButton aria-label="Instagram" sx={{ color: '#c32462' }}>
+              <IconButton aria-label="Instagram" sx={{ color: 'white' }}>
                 <Instagram />
               </IconButton>
-              <IconButton aria-label="Twitter" sx={{ color: '#1da1f2' }}>
+              <IconButton aria-label="Twitter" sx={{ color: 'white' }}>
                 <Twitter />
               </IconButton>
             </Box>
           </Grid>
           <Grid item xs={12} md={6}>
-            <Typography variant="h6" color="primary">
+            <Typography variant="h6" color="white">
               Contactenos
             </Typography>
             <Typography variant="body2">
@@ -55,7 +55,14 @@ function nav(path){
               Phone: +1-234-567-890
             </Typography>
             <Box sx={{ mt: 2 }}>
-              <Button onClick={() => nav("/condiciones")} variant="outlined" color="primary">
+              <Button onClick={() => nav("/condiciones")} variant="outlined"  sx={{
+        color: 'white',
+        borderColor: 'white',
+        '&:hover': {
+          backgroundColor: 'white',
+          color: 'black',
+        },
+      }}>
                 Terminos & Condiciones
               </Button>
              

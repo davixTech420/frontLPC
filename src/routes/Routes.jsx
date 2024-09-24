@@ -28,7 +28,7 @@ export const PublicRoutes = () => {
       <Route path="/loginPublic" element={<PublicLogin />}></Route>
       <Route path="/registrar" element={<PublicRegis />}></Route>
       <Route path="/calendario" element={<Calendario />}></Route>
-      <Route path="/cal" element={<Ejemplo />}></Route>
+      
 
     </Routes>
   );

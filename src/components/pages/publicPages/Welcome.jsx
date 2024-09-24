@@ -25,6 +25,7 @@ import {
 import Map from "../component/Map";
 import FooterPublic from "../../partials/FooterPublic";
 import HeaderPublic from "../../partials/HeaderPublic";
+import "../../../assets/public.css";
 import {
   SrcImagen,
   getShows,
@@ -35,6 +36,7 @@ import {
 export default function ModernIndexPage() {
   const [shows, setShows] = useState([]);
   const [nextShow, setNextShow] = useState(null);
+  const [nextSala,setNextSala]= useState(null);
   const [currentShowIndex, setCurrentShowIndex] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -86,6 +88,17 @@ export default function ModernIndexPage() {
     fetchShows();
   }, []);
 
+ /*  useEffect(() => {
+    const obteSala = async () => {
+    console.log("proximo",nextShow);
+      const res = await getSalasId(nextShow?.id)
+      
+      console.log("desde la sala",res);
+      
+    }
+obteSala();
+  },[nextShow]); */
+
   const nextShowHandler = () => {
     setCurrentShowIndex((prevIndex) => (prevIndex + 1) % shows.length);
   };
@@ -114,6 +127,7 @@ export default function ModernIndexPage() {
       timeZone: "UTC",
     });
   };
+  console.log(shows);
 
   const getGoogleMapsUrl = (address) => {
     return `https://www.google.com/maps/embed/v1/place?key=YOUR_GOOGLE_MAPS_API_KEY&q=${encodeURIComponent(
@@ -175,7 +189,7 @@ export default function ModernIndexPage() {
               <Card
                 sx={{
                   boxShadow: "0px 10px 20px rgba(0, 0, 0, 0.5)",
-                  background: "rgba(255, 255, 255, 0.05)",
+                  background: "rgba(255, 255, 255)",
                   backdropFilter: "blur(10px)",
                   borderRadius: theme.shape.borderRadius * 2,
                 }}
@@ -242,7 +256,7 @@ export default function ModernIndexPage() {
                               label={tag}
                               size="small"
                               sx={{
-                                backgroundColor: "rgba(255, 255, 255, 0.2)",
+                                backgroundColor: "rgba(255, 255, 255)",
                                 color: "white",
                               }}
                             />
@@ -272,7 +286,7 @@ export default function ModernIndexPage() {
                           sx={{ marginRight: 1, color: "primary.main" }}
                         />
                         <Typography variant="body1">
-                          {formatTime(currentShow?.fechaPresentar)}
+                          {currentShow?.horaInicio}
                         </Typography>
                       </Box>
                     </Grid>
@@ -282,7 +296,7 @@ export default function ModernIndexPage() {
                           sx={{ marginRight: 1, color: "primary.main" }}
                         />
                         <Typography variant="body1">
-                          {currentShow?.sala ? currentShow.sala.nombre : "TBA"}
+                          {currentShow?.sala ? currentShow.sala.direccion : "Bogota D.C"}
                         </Typography>
                       </Box>
                     </Grid>
@@ -299,7 +313,7 @@ export default function ModernIndexPage() {
                       onClick={prevShowHandler}
                       sx={{ color: "primary.main" }}
                     >
-                      <ChevronLeft />
+                      <ChevronLeft className="colorPrimaIcon" />
                     </IconButton>
                     <motion.div
                       whileHover={{ scale: 1.05 }}
@@ -313,6 +327,9 @@ export default function ModernIndexPage() {
                           "&:hover": {
                             backgroundColor: "primary.dark",
                           },
+                        }}
+                        onClick={() => {
+                          window.location.href= "https://tuboleta.com/"
                         }}
                       >
                         Reservar Ahora
@@ -333,7 +350,7 @@ export default function ModernIndexPage() {
               <Card
                 sx={{
                   boxShadow: "0px 10px 20px rgba(0, 0, 0, 0.5)",
-                  background: "rgba(255, 255, 255, 0.1)",
+                  background: "rgba(255, 255, 255)",
                   backdropFilter: "blur(10px)",
                   borderRadius: theme.shape.borderRadius * 2,
                 }}
@@ -371,7 +388,7 @@ export default function ModernIndexPage() {
                 sx={{
                   mt: 2,
                   boxShadow: "0px 10px 20px rgba(0, 0, 0, 0.5)",
-                  background: "rgba(255, 255, 255, 0.1)",
+                  background: "rgba(255, 255, 255)",
                   backdropFilter: "blur(10px)",
                   borderRadius: theme.shape.borderRadius * 2,
                 }}
@@ -397,7 +414,7 @@ export default function ModernIndexPage() {
               sx={{
                 mt: 4,
                 boxShadow: "0px 10px 20px rgba(0, 0, 0, 0.5)",
-                background: "rgba(255, 255, 255, 0.05)",
+                background: "rgba(255, 255, 255)",
                 backdropFilter: "blur(10px)",
                 borderRadius: theme.shape.borderRadius * 2,
               }}
@@ -421,15 +438,15 @@ export default function ModernIndexPage() {
                     </Typography>
                     <Typography variant="body1" paragraph>
                       <strong>Hora:</strong>{" "}
-                      {formatTime(nextShow.fechaPresentar)}
+                      {nextShow.horaInicio}
                     </Typography>
                     <Typography variant="body1" paragraph>
                       <strong>Ubicación:</strong>{" "}
-                      {nextShow.sala ? nextShow.sala.nombre : "TBA"}
+                      {nextShow.sala ? nextShow.sala.data.direccion : "Bogota D.C"}
                     </Typography>
                     <Typography variant="body1" paragraph>
                       <strong>Dirección:</strong>{" "}
-                      {nextShow.sala ? nextShow.sala.direccion : "TBA"}
+                      {nextShow.sala ? nextShow.sala.data.direccion : "TBA"}
                     </Typography>
                     <Box
                       sx={{ display: "flex", flexWrap: "wrap", gap: 1, mb: 2 }}
@@ -455,6 +472,9 @@ export default function ModernIndexPage() {
                         "&:hover": {
                           backgroundColor: "primary.dark",
                         },
+                      }}
+                      onClick={() => {
+                        window.location.href= "https://tuboleta.com/"
                       }}
                     >
                       Comprar Entradas
