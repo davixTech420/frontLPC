@@ -15,7 +15,6 @@ import Mensaje from "../components/pages/clientPages/Mensajes";
 import MisShows from "../components/pages/clientPages/MisShows"
 import MiSala from "../components/pages/jefePages/MiSala";
 import EmployeeDashboard from "../components/pages/emplePages/DashboardEmple";
-import Ejemplo from "../components/pages/emplePages/ejemplo";
 
 //aca se manejan todas las rutas publica donde todo el mundo puede ver
 export const PublicRoutes = () => {

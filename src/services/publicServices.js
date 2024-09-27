@@ -1,9 +1,9 @@
 import axios from "axios";
 
-const baseUrl = "http://localhost:3001/api/auth";
+const baseUrl = "https://backlpc-production.up.railway.app/api/auth";
 
 export const SrcImagen = (path)=>{
-    return `http://localhost:3001${path}`
+    return `https://backlpc-production.up.railway.app${path}`
 }
 export const Login = (formData) => {
     return axios.post(`${baseUrl}/login`,formData);
