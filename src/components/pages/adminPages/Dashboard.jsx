@@ -7,10 +7,8 @@ import {
   Card,
   CardContent,
   Typography,
-  Avatar,
   List,
   ListItem,
-  ListItemAvatar,
   ListItemText,
   Divider,
   TableContainer,
@@ -33,7 +31,7 @@ import {
     Legend,
     Filler,
 } from 'chart.js';
-
+import { SrcImagen } from "../../../services/publicServices";
 import { getCliente,getJefe } from "../../../services/AdminServices";
 import {getShows ,getSalas } from "../../../services/publicServices";
 
@@ -433,7 +431,7 @@ const chartData = shows.length > 0 ?
             <TableRow key={sala.id}>
               <TableCell>{sala.id}</TableCell>
               <TableCell>
-                {sala.imagen && <img src={sala.imagen} alt={sala.nombre} width={50} height={50} />} {/* Conditionally render image */}
+                {sala.imagen && <img src={SrcImagen(sala.imagen)} alt={sala.nombre} width={50} height={50} />} {/* Conditionally render image */}
               </TableCell>
               <TableCell>{sala.nombre}</TableCell>
               <TableCell>{sala.direccion}</TableCell>

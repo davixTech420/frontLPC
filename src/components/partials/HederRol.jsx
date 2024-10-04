@@ -9,11 +9,11 @@ import logo from "../../images/lpc.webp";
 import { Avatar, Divider, List, ListItemText } from "@mui/material";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
-import SupervisorAccountIcon from '@mui/icons-material/SupervisorAccount';
-import LayersIcon from "@mui/icons-material/Layers";
+import ChecklistIcon from '@mui/icons-material/Checklist';
+import SupervisedUserCircleIcon from '@mui/icons-material/SupervisedUserCircle';
 import DashboardIcon from "@mui/icons-material/Dashboard";
 import PeopleIcon from "@mui/icons-material/People";
-import BarChartIcon from "@mui/icons-material/BarChart";
+import StadiumIcon from '@mui/icons-material/Stadium';
 import AssignmentIcon from "@mui/icons-material/Assignment";
 import MuiAppBar from "@mui/material/AppBar";
 import MuiDrawer from "@mui/material/Drawer";
@@ -22,14 +22,13 @@ import Toolbar from "@mui/material/Toolbar";
 import IconButton from "@mui/material/IconButton";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import InputBase from "@mui/material/InputBase";
-import Badge from "@mui/material/Badge";
+import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings';
+import BadgeIcon from '@mui/icons-material/Badge';
 import MenuItem from "@mui/material/MenuItem";
 import Menu from "@mui/material/Menu";
 import MenuIcon from "@mui/icons-material/Menu";
 import SearchIcon from "@mui/icons-material/Search";
 import AccountCircle from "@mui/icons-material/AccountCircle";
-import MailIcon from "@mui/icons-material/Mail";
-import NotificationsIcon from "@mui/icons-material/Notifications";
 import TheaterComedyIcon from '@mui/icons-material/TheaterComedy';
 import MoreIcon from "@mui/icons-material/MoreVert";
 import { useNavigate } from "react-router-dom";
@@ -160,6 +159,7 @@ export default function HeaderRol() {
   const menuId = "primary-search-account-menu";
   const renderMenu = (
     <Menu
+    style={{ background:"transparent" ,opacity:1}}
       anchorEl={anchorEl}
       anchorOrigin={{
         vertical: "top",
@@ -191,25 +191,26 @@ export default function HeaderRol() {
       </ListItemButton>
       <ListItemButton className="btn-men-lateral" onClick={() => navigate("/admin/tabla/admins")}>
         <ListItemIcon>
-        <PeopleIcon className="icon-men-lateral-header"  />
+        <AdminPanelSettingsIcon className="icon-men-lateral-header"  />
+        
         </ListItemIcon>
         <ListItemText primary="Administradores" />
       </ListItemButton>
       <ListItemButton className="btn-men-lateral" onClick={() => navigate("/admin/tabla/clientes")}>
         <ListItemIcon>
-          <PeopleIcon className="icon-men-lateral-header"  />
+        <PeopleIcon className="icon-men-lateral-header"  />
         </ListItemIcon>
         <ListItemText primary="Clientes" />
       </ListItemButton>
       <ListItemButton className="btn-men-lateral" onClick={() => navigate("/admin/tabla/empleados")}>
         <ListItemIcon>
-          <BarChartIcon className="icon-men-lateral-header"  />
+          <BadgeIcon className="icon-men-lateral-header"  />
         </ListItemIcon>
         <ListItemText primary="Empleados" />
       </ListItemButton>
       <ListItemButton className="btn-men-lateral" onClick={() => navigate("/admin/tabla/salas")}>
         <ListItemIcon>
-          <LayersIcon className="icon-men-lateral-header"  />
+          <StadiumIcon className="icon-men-lateral-header"  />
         </ListItemIcon>
         <ListItemText primary="Salas" />
       </ListItemButton>
@@ -221,13 +222,13 @@ export default function HeaderRol() {
       </ListItemButton>
       <ListItemButton className="btn-men-lateral" onClick={() => navigate("/admin/tabla/jefesalas")}>
         <ListItemIcon>
-        <SupervisorAccountIcon  className="icon-men-lateral-header" />
+        <SupervisedUserCircleIcon className="icon-men-lateral-header" />
         </ListItemIcon>
         <ListItemText primary="Jefes De Sala" />
       </ListItemButton>
       <ListItemButton className="btn-men-lateral" onClick={() => navigate("/admin/tabla/pedidos")}>
         <ListItemIcon>
-          <AssignmentIcon  className="icon-men-lateral-header"/>
+          <ChecklistIcon  className="icon-men-lateral-header"/>
         </ListItemIcon>
         <ListItemText primary="Pedidos" />
       </ListItemButton>
