@@ -1,16 +1,13 @@
 import axios from "axios";
 //produccion
 /* const baseUrl = "https://backlpc-production.up.railway.app/api/auth"; */
-//local
-const baseUrl = "http://localhost:3001/api/auth";
-
-
-
-//produccion
 /* export const SrcImagen = (path)=>{
     return `https://backlpc-production.up.railway.app${path}`
 } */
 
+    
+//local
+const baseUrl = "http://localhost:3001/api/auth";
 
      export const SrcImagen = (path)=>{
     return `http://localhost:3001${path}`

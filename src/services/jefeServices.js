@@ -1,7 +1,7 @@
 import axios from "axios";
 
-
-const baseUrl = "https://backlpc-production.up.railway.app/api/jefe";
+//local
+const baseUrl = "http://localhost:3001/api/jefe";
 
 
 export const activarPedido = (id) => {

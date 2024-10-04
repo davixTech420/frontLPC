@@ -210,13 +210,11 @@ export default function Dashboard() {
    
 
 
-  function createData(name, calories, fat, carbs, protein) {
-    return { name, calories, fat, carbs, protein };
-  }
+ 
 
   
 
-console.log(shows);
+
 const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 const chartData = shows.length > 0 ?
     months.map(month => ({
