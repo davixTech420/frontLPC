@@ -9,6 +9,7 @@ import Button from "@mui/material/Button";
 import axios from 'axios';
 import { PhotoCamera } from "@mui/icons-material";
 import { SrcImagen } from "../../../services/publicServices";
+import InputValidate from "../component/ValidateInput";
 import { textFieldValidar } from "../../../middleware/FormValidation";
 import {
   Box,
@@ -22,19 +23,19 @@ import {
   Avatar,
   Typography,
 } from "@mui/material";
-import { crearSala,crearShow,updateSala,updateUser,getSalasSin,getSalasCon } from "../../../services/AdminServices";
+import { crearSala, crearShow, updateSala, updateUser, getSalasSin, getSalasCon } from "../../../services/AdminServices";
 import "../../../assets/admin.css";
 export const FormComponent = ({ open, onClose, title, children, actions }) => {
   return (
     <Dialog open={open} onClose={onClose}
-    PaperProps={{
-      style: {
-        borderRadius: 40,
-      },
-    }}
-    TransitionComponent={Fade}
-    transitionDuration={{ enter: 500, exit: 500 }} >
-      <DialogTitle sx={{ background:"#07575B",color:"white" }}>
+      PaperProps={{
+        style: {
+          borderRadius: 40,
+        },
+      }}
+      TransitionComponent={Fade}
+      transitionDuration={{ enter: 500, exit: 500 }} >
+      <DialogTitle sx={{ background: "#07575B", color: "white" }}>
         {title}{" "}
         <IconButton
           aria-label="close"
@@ -49,13 +50,13 @@ export const FormComponent = ({ open, onClose, title, children, actions }) => {
         </IconButton>{" "}
       </DialogTitle>
       <DialogContent>{children}</DialogContent>
-      <DialogActions sx={{ justifyContent: "center", background:"#07575B" }}>{actions}</DialogActions>
+      <DialogActions sx={{ justifyContent: "center", background: "#07575B" }}>{actions}</DialogActions>
     </Dialog>
   );
 };
 
-export const FormAdmin = ({ open, close,record }) => {
- 
+export const FormAdmin = ({ open, close, record }) => {
+
   const [formData, setFormData] = useState({
     nombre: record?.nombre || "",
     apellido: record?.apellido || "",
@@ -70,33 +71,33 @@ export const FormAdmin = ({ open, close,record }) => {
   useEffect(() => {
     if (record) {
       setFormData({
-        nombre:record.nombre,
-        apellido:record.apellido,
-        tipIdentidad:record.tipIdentidad,
-        identificacion:record.identificacion,
-        telefono:record.telefono,
-        email:record.email,
-        password:record.password,
-        estado:record.estado
-      });  
-    }else{
+        nombre: record.nombre,
+        apellido: record.apellido,
+        tipIdentidad: record.tipIdentidad,
+        identificacion: record.identificacion,
+        telefono: record.telefono,
+        email: record.email,
+        password: record.password,
+        estado: record.estado
+      });
+    } else {
       setFormData({
-        nombre:"",
-        apellido:"",
-        tipIdentidad:"",
-        identificacion:"",
-        telefono:"",
-        email:"",
-        password:"",
-        estado:true,
-        role:"admin"
+        nombre: "",
+        apellido: "",
+        tipIdentidad: "",
+        identificacion: "",
+        telefono: "",
+        email: "",
+        password: "",
+        estado: true,
+        role: "admin"
       });
     }
-    
-  },[record,open]);
 
-  const hanSubmit  = async  (e) => {
-    try{
+  }, [record, open]);
+
+  const hanSubmit = async (e) => {
+    try {
       const regis = await axios.post('http://localhost:3001/api/auth/register', formData);
       console.log(regis.data);
       close();
@@ -104,10 +105,10 @@ export const FormAdmin = ({ open, close,record }) => {
       console.log(error);
     }
   };
-  const hanUpdate  = async  (e) => {
-   
-    try{
-      const regis = updateUser(record.id,formData);
+  const hanUpdate = async (e) => {
+
+    try {
+      const regis = updateUser(record.id, formData);
       console.log(regis.data);
       close();
     } catch (error) {
@@ -115,60 +116,43 @@ export const FormAdmin = ({ open, close,record }) => {
     }
   };
 
- const handleSubmit = (e) => {
-  if (record) {
-    hanUpdate(formData);
-  }else{
-    hanSubmit(formData);
+  const handleSubmit = (e) => {
+    if (record) {
+      hanUpdate(formData);
+    } else {
+      hanSubmit(formData);
+    }
+
   }
-   
- }
   return (
     <FormComponent
       open={open}
       onClose={close}
-      title={record ? "Actualizar Administrador": "Crear Administrador"}
+      title={record ? "Actualizar Administrador" : "Crear Administrador"}
       children={
         <Box sx={{ mt: 3, p: 3 }} component="form" noValidate onSubmit={handleSubmit}>
           <Grid container spacing={2}>
             <Grid item xs={12} sm={6}>
-              <TextField
-                autoComplete="given-name"
-                name="nombre"
+              <InputValidate nombre="nombre"
                 value={formData.nombre}
                 onChange={(e) =>
-                  setFormData({ ...formData, nombre: e.target.value })
-                }
-                required
-                fullWidth
-                id="nombre"
-                label="Nombre"
-                autoFocus
-                variant="filled"
-              />
+                  setFormData({ ...formData, nombre: e.target.value })} />
+
             </Grid>
             <Grid item xs={12} sm={6}>
-              <TextField
-                required
-                fullWidth
+              <InputValidate nombre="apellido"
                 value={formData.apellido}
                 onChange={(e) =>
-                  setFormData({ ...formData, apellido: e.target.value })
-                }
-                id="apellido"
-                label="Apellido"
-                name="apellido"
-                autoComplete="family-name"
-                variant="filled"
-              />
+                  setFormData({ ...formData, apellido: e.target.value })} />
             </Grid>
 
             <Grid item xs={12} sm={6}>
-              <FormControl variant="filled" sx={{ minWidth: "100%" }}>
+              <FormControl focused variant="standard" sx={{ minWidth: "100%" }}>
                 <InputLabel id="demo-simple-select-filled-label">
                   Tipo De Identificacion
                 </InputLabel>
                 <Select
+
                   value={formData.tipIdentidad}
                   onChange={(e) =>
                     setFormData({ ...formData, tipIdentidad: e.target.value })
@@ -186,69 +170,40 @@ export const FormAdmin = ({ open, close,record }) => {
               </FormControl>
             </Grid>
             <Grid item xs={12} sm={6}>
-              <TextField
-                required
-                fullWidth
+              <InputValidate nombre="identificacion"
                 value={formData.identificacion}
                 onChange={(e) =>
                   setFormData({ ...formData, identificacion: e.target.value })
                 }
-                id="identificacion"
-                label="Identificacion"
-                name="identificacion"
-                autoComplete="family-name"
-                variant="filled"
               />
             </Grid>
 
             <Grid item xs={12}>
-              <TextField
-                required
-                fullWidth
+            <InputValidate nombre="email"
                 value={formData.email}
                 onChange={(e) =>
                   setFormData({ ...formData, email: e.target.value })
                 }
-                id="email"
-                variant="filled"
-                label="Email"
-                name="email"
-                autoComplete="email"
               />
+              
             </Grid>
             <Grid item xs={12}>
-              <TextField
-                required
-                fullWidth
+            <InputValidate nombre="telefono"
                 value={formData.telefono}
-                onChange={(e) => {
-                  textFieldValidar("telefono",e.target.value) == null ?
-                  setFormData({ ...formData, telefono: e.target.value }) :
-                  console.log("El telefono no es válido");
+                onChange={(e) =>
+                  setFormData({ ...formData, telefono: e.target.value })
                 }
-                }
-                id="telefono"
-                variant="filled"
-                label="Telefono"
-                name="telefono"
-                autoComplete="family-name"
               />
+              
             </Grid>
             <Grid item xs={12}>
-              <TextField
-                required
-                fullWidth
+            <InputValidate nombre="pass"
                 value={formData.password}
                 onChange={(e) =>
                   setFormData({ ...formData, password: e.target.value })
                 }
-                name="password"
-                label="Contraseña"
-                type="password"
-                id="password"
-                autoComplete="new-password"
-                variant="filled"
               />
+              
             </Grid>
           </Grid>
         </Box>
@@ -256,7 +211,7 @@ export const FormAdmin = ({ open, close,record }) => {
       actions={
         <>
           <Button variant="contained" className="btn-admin-panel" onClick={handleSubmit}>
-          {record ? "Actualizar" : "Crear"}
+            {record ? "Actualizar" : "Crear"}
           </Button>
         </>
       }
@@ -296,7 +251,7 @@ export const FormCliente = ({ open, close }) => {
     tipIdentidad: "",
     identificacion: "",
     telefono: "",
-    nacionCliente:"",
+    nacionCliente: "",
     direccion: "",
     email: "",
     password: "",
@@ -305,9 +260,9 @@ export const FormCliente = ({ open, close }) => {
   });
 
 
-  const hanSubmit  = async  (e) => {
+  const hanSubmit = async (e) => {
     e.preventDefault();
-    try{
+    try {
       const regis = await axios.post('http://localhost:3001/api/auth/register', formData);
       console.log(regis.data);
       close();
@@ -405,7 +360,7 @@ export const FormCliente = ({ open, close }) => {
                 variant="filled"
                 label="Direccion"
                 name="Direccion"
-                
+
               />
             </Grid>
             <Grid item xs={12}>
@@ -420,7 +375,7 @@ export const FormCliente = ({ open, close }) => {
                 variant="filled"
                 label="Nacionalidad"
                 name="Nacionalidad"
-                
+
               />
             </Grid>
             <Grid item xs={12}>
@@ -474,7 +429,7 @@ export const FormCliente = ({ open, close }) => {
       }
       actions={
         <>
-          <Button variant="contained"  onClick={hanSubmit}>
+          <Button variant="contained" onClick={hanSubmit}>
             Crear
           </Button>
         </>
@@ -520,49 +475,49 @@ este es  el fromulario para crear salas *
 *
 *
 **/
-export const FormSala = ({ open, close,record }) => { 
- const [image,setImage]=useState(null);
+export const FormSala = ({ open, close, record }) => {
+  const [image, setImage] = useState(null);
   const [formData, setFormData] = useState({
     imagen: record?.imagen || "",
     nombre: record?.nombre || "",
-    direccion:record?.direccion || "",
-    capacidad:record?.capacidad || "",
-    estado:record?.estado || true
+    direccion: record?.direccion || "",
+    capacidad: record?.capacidad || "",
+    estado: record?.estado || true
   });
   useEffect(() => {
     if (record) {
       setFormData({
-        imagen:record.imagen,
-        nombre:record.nombre,
-        direccion:record.direccion,
-        capacidad:record.capacidad,
-        estado:record.estado
-      });  
-    }else{
+        imagen: record.imagen,
+        nombre: record.nombre,
+        direccion: record.direccion,
+        capacidad: record.capacidad,
+        estado: record.estado
+      });
+    } else {
       setFormData({
-        imagen:image,
-        nombre:"",
-        direccion:"",
-        capacidad:"",
-        estado:true,
+        imagen: image,
+        nombre: "",
+        direccion: "",
+        capacidad: "",
+        estado: true,
       });
     }
-    
-  },[record,open]);
-  
-  const hanUpdate = async  (e) => {
-   
-    try{
-      const regis = updateSala(record.id,formData);
+
+  }, [record, open]);
+
+  const hanUpdate = async (e) => {
+
+    try {
+      const regis = updateSala(record.id, formData);
       console.log(regis.data);
       close();
     } catch (error) {
       console.log(error);
     }
   };
-  const hanSubmit  = async  (e) => {
+  const hanSubmit = async (e) => {
 
-    try{
+    try {
       const regis = crearSala(formData);
       console.log(regis.data);
       close();
@@ -571,7 +526,7 @@ export const FormSala = ({ open, close,record }) => {
     }
   };
   const handleSubmit = (e) => {
-  
+
     if (record) {
       hanUpdate(formData);
     } else {
@@ -611,62 +566,62 @@ export const FormSala = ({ open, close,record }) => {
       children={
         <Box sx={{ mt: 3, p: 3 }} component="form" noValidate onSubmit={handleSubmit}>
           <Grid container spacing={2}>
-           <Grid item xs={12}>
-                      <Box
-                        sx={{
-                          display: "flex",
-                          flexDirection: "column",
-                          alignItems: "center",
-                          justifyContent: "center",
-                          p: 2,
-                          width: "100%",
-                        }}
-                      >
-                        {/* Input oculto para subir la imagen */}
-                        <input
-                          accept="image/*"
-                          style={{ display: "none" }}
-                          id="upload-image"
-                          type="file"
-                          onChange={handleImageChange}
-                        />
-                        {/* Botón para seleccionar la imagen */}
-                        <label htmlFor="upload-image">
-                          <Button
-                            variant="outlined"
-                            component="span"
-                            startIcon={<PhotoCamera />}
-                            sx={{
-                              display: "block",
-                              mb: 2,
-                              textTransform: "none",
-                            }}
-                          >
-                            Seleccionar Imagen
-                          </Button>
-                        </label>
+            <Grid item xs={12}>
+              <Box
+                sx={{
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  p: 2,
+                  width: "100%",
+                }}
+              >
+                {/* Input oculto para subir la imagen */}
+                <input
+                  accept="image/*"
+                  style={{ display: "none" }}
+                  id="upload-image"
+                  type="file"
+                  onChange={handleImageChange}
+                />
+                {/* Botón para seleccionar la imagen */}
+                <label htmlFor="upload-image">
+                  <Button
+                    variant="outlined"
+                    component="span"
+                    startIcon={<PhotoCamera />}
+                    sx={{
+                      display: "block",
+                      mb: 2,
+                      textTransform: "none",
+                    }}
+                  >
+                    Seleccionar Imagen
+                  </Button>
+                </label>
 
-                        {/* Previsualización de la imagen */}
-                        {image || formData.imagen ? (
-                          <Avatar
-                            src={image||SrcImagen(formData.imagen)}
-                            alt="Preview"
-                            sx={{
-                              width: 200,
-                              height: 200,
-                              borderRadius: "10px",
-                              boxShadow: 2,
-                              objectFit: "cover",
-                            }}
-                          />
-                        ) : (
-                          <Typography variant="body2" color="text.secondary">
-                            No se ha seleccionado ninguna imagen.
-                          </Typography>
-                        )}
-                      </Box>
-                    </Grid>
-           
+                {/* Previsualización de la imagen */}
+                {image || formData.imagen ? (
+                  <Avatar
+                    src={image || SrcImagen(formData.imagen)}
+                    alt="Preview"
+                    sx={{
+                      width: 200,
+                      height: 200,
+                      borderRadius: "10px",
+                      boxShadow: 2,
+                      objectFit: "cover",
+                    }}
+                  />
+                ) : (
+                  <Typography variant="body2" color="text.secondary">
+                    No se ha seleccionado ninguna imagen.
+                  </Typography>
+                )}
+              </Box>
+            </Grid>
+
             <Grid item xs={12} sm={6}>
               <TextField
                 required
@@ -714,14 +669,14 @@ export const FormSala = ({ open, close,record }) => {
               />
             </Grid>
 
-            
+
           </Grid>
         </Box>
       }
       actions={
         <>
           <Button variant="contained" onClick={handleSubmit}>
-          {record ? "Actualizar" : "Crear"}
+            {record ? "Actualizar" : "Crear"}
           </Button>
         </>
       }
@@ -762,17 +717,17 @@ export const FormSala = ({ open, close,record }) => {
  * 
  */
 
-export const FormEmpleado = ({ open, close,record }) => {
- 
+export const FormEmpleado = ({ open, close, record }) => {
+
   const [formData, setFormData] = useState({
-    nombre:record?.nombre || "",
+    nombre: record?.nombre || "",
     apellido: record?.apellido || "",
     tipIdentidad: record?.tipIdentidad || "",
     identificacion: record?.identificacion || "",
     telefono: record?.telefono || "",
     email: record?.email || "",
     password: record?.password || "",
-    estado: record?.estado ||  true,
+    estado: record?.estado || true,
     role: "empleado",
   });
 
@@ -780,37 +735,37 @@ export const FormEmpleado = ({ open, close,record }) => {
   useEffect(() => {
     if (record) {
       setFormData({
-        nombre:record.nombre,
-        apellido:record.apellido,
-        tipIdentidad:record.tipIdentidad,
-        identificacion:record.identificacion,
-        telefono:record.telefono,
-        email:record.email,
-        password:record.password,
-        estado:record.estado,
+        nombre: record.nombre,
+        apellido: record.apellido,
+        tipIdentidad: record.tipIdentidad,
+        identificacion: record.identificacion,
+        telefono: record.telefono,
+        email: record.email,
+        password: record.password,
+        estado: record.estado,
         role: "empleado",
       })
-      
-    }else{
+
+    } else {
       setFormData({
-        nombre:"",
-        apellido:"",
-        tipIdentidad:"",
-        identificacion:"",
-        telefono:"",
-        email:"",
-        password:"",
-        estado:true,
+        nombre: "",
+        apellido: "",
+        tipIdentidad: "",
+        identificacion: "",
+        telefono: "",
+        email: "",
+        password: "",
+        estado: true,
         role: "empleado",
       })
-      
-  }
-},[record,open]);
+
+    }
+  }, [record, open]);
 
 
-  const hanSubmit  = async  (e) => {
-   
-    try{
+  const hanSubmit = async (e) => {
+
+    try {
       const regis = await axios.post('http://localhost:3001/api/auth/register', formData);
       console.log(regis.data);
       close();
@@ -819,10 +774,10 @@ export const FormEmpleado = ({ open, close,record }) => {
     }
   };
 
-  const hanUpdate  = async  (e) => {
-   
-    try{
-      const regis = updateUser(record.id,formData);
+  const hanUpdate = async (e) => {
+
+    try {
+      const regis = updateUser(record.id, formData);
       console.log(regis.data);
       close();
     } catch (error) {
@@ -830,14 +785,14 @@ export const FormEmpleado = ({ open, close,record }) => {
     }
   };
 
- const handleSubmit = (e) => {
-  if (record) {
-    hanUpdate(formData);
-  }else{
-    hanSubmit(formData);
+  const handleSubmit = (e) => {
+    if (record) {
+      hanUpdate(formData);
+    } else {
+      hanSubmit(formData);
+    }
+
   }
-   
- }
 
   return (
     <FormComponent
@@ -1006,8 +961,8 @@ este es  el fromulario para crear shows *
 *
 **/
 export const FormShows = ({ open, close }) => {
- const [salas,setSalas] = useState([]);
- const [image,setImage] = useState(null);
+  const [salas, setSalas] = useState([]);
+  const [image, setImage] = useState(null);
   const [formData, setFormData] = useState({
     imagen: image,
     nombre: "",
@@ -1019,21 +974,21 @@ export const FormShows = ({ open, close }) => {
     salaId: "",
   });
   useEffect(() => {
-    try{
+    try {
       const obteSalas = async () => {
         const resSala = await getSalasCon();
         setSalas(resSala.data);
       }
-  obteSalas();
+      obteSalas();
     }
     catch (error) {
       console.log(error);
     }
-  },[salas])
+  }, [salas])
 
-  const hanSubmit  = async  (e) => {
+  const hanSubmit = async (e) => {
     e.preventDefault();
-    try{
+    try {
       console.log(formData);
       const regis = crearShow(formData);
       console.log(regis.data);
@@ -1071,59 +1026,59 @@ export const FormShows = ({ open, close }) => {
         <Box sx={{ mt: 3, p: 3 }} component="form" noValidate onSubmit={hanSubmit}>
           <Grid container spacing={2}>
             <Grid item xs={12}>
-            <Box
-                        sx={{
-                          display: "flex",
-                          flexDirection: "column",
-                          alignItems: "center",
-                          justifyContent: "center",
-                          p: 2,
-                          width: "100%",
-                        }}
-                      >
-                        {/* Input oculto para subir la imagen */}
-                        <input
-                          accept="image/*"
-                          style={{ display: "none" }}
-                          id="upload-image"
-                          type="file"
-                          onChange={handleImageChange}
-                        />
-                        {/* Botón para seleccionar la imagen */}
-                        <label htmlFor="upload-image">
-                          <Button
-                            variant="outlined"
-                            component="span"
-                            startIcon={<PhotoCamera />}
-                            sx={{
-                              display: "block",
-                              mb: 2,
-                              textTransform: "none",
-                            }}
-                          >
-                            Seleccionar Imagen
-                          </Button>
-                        </label>
+              <Box
+                sx={{
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  p: 2,
+                  width: "100%",
+                }}
+              >
+                {/* Input oculto para subir la imagen */}
+                <input
+                  accept="image/*"
+                  style={{ display: "none" }}
+                  id="upload-image"
+                  type="file"
+                  onChange={handleImageChange}
+                />
+                {/* Botón para seleccionar la imagen */}
+                <label htmlFor="upload-image">
+                  <Button
+                    variant="outlined"
+                    component="span"
+                    startIcon={<PhotoCamera />}
+                    sx={{
+                      display: "block",
+                      mb: 2,
+                      textTransform: "none",
+                    }}
+                  >
+                    Seleccionar Imagen
+                  </Button>
+                </label>
 
-                        {/* Previsualización de la imagen */}
-                        {image ? (
-                          <Avatar
-                            src={image}
-                            alt="Preview"
-                            sx={{
-                              width: 200,
-                              height: 200,
-                              borderRadius: "10px",
-                              boxShadow: 2,
-                              objectFit: "cover",
-                            }}
-                          />
-                        ) : (
-                          <Typography variant="body2" color="text.secondary">
-                            No se ha seleccionado ninguna imagen.
-                          </Typography>
-                        )}
-                      </Box>
+                {/* Previsualización de la imagen */}
+                {image ? (
+                  <Avatar
+                    src={image}
+                    alt="Preview"
+                    sx={{
+                      width: 200,
+                      height: 200,
+                      borderRadius: "10px",
+                      boxShadow: 2,
+                      objectFit: "cover",
+                    }}
+                  />
+                ) : (
+                  <Typography variant="body2" color="text.secondary">
+                    No se ha seleccionado ninguna imagen.
+                  </Typography>
+                )}
+              </Box>
             </Grid>
             <Grid item xs={12}>
               <TextField
@@ -1141,7 +1096,7 @@ export const FormShows = ({ open, close }) => {
               />
             </Grid>
 
-           
+
             <Grid item xs={12} >
               <TextField
                 required
@@ -1223,7 +1178,7 @@ export const FormShows = ({ open, close }) => {
                   </MenuItem>
                   {salas.map((sala) => (
                     <MenuItem value={sala.id}>{sala.nombre}</MenuItem>
-                  ))  
+                  ))
                   }
                 </Select>
               </FormControl>
@@ -1280,7 +1235,7 @@ este es  el fromulario para crear jefes de salas *
 *
 **/
 export const FormJefe = ({ open, close }) => {
- 
+
   const [formData, setFormData] = useState({
     nombre: "",
     apellido: "",
@@ -1293,27 +1248,27 @@ export const FormJefe = ({ open, close }) => {
     role: "jefesala",
     salaId: "",
   });
-  const [salas,setSalas ] = useState([]);
+  const [salas, setSalas] = useState([]);
 
 
-useEffect(() => {
-  try{
-    const obteSalas = async () => {
-      const resSala = await getSalasSin();
-      setSalas(resSala.data);
+  useEffect(() => {
+    try {
+      const obteSalas = async () => {
+        const resSala = await getSalasSin();
+        setSalas(resSala.data);
+      }
+      obteSalas();
     }
-obteSalas();
-  }
-  catch (error) {
-    console.log(error);
-  }
-},[salas])
+    catch (error) {
+      console.log(error);
+    }
+  }, [salas])
 
 
 
-  const hanSubmit  = async  (e) => {
+  const hanSubmit = async (e) => {
     e.preventDefault();
-    try{
+    try {
       const regis = await axios.post(`http://localhost:3001/api/auth/register`, formData);
       console.log(regis.data);
       close();
@@ -1416,7 +1371,7 @@ obteSalas();
                 autoComplete="email"
               />
             </Grid>
-            
+
             <Grid item xs={12}>
               <TextField
                 required
@@ -1450,7 +1405,7 @@ obteSalas();
                   </MenuItem>
                   {salas.map((sala) => (
                     <MenuItem value={sala.id}>{sala.nombre}</MenuItem>
-                  ))  
+                  ))
                   }
                 </Select>
               </FormControl>

@@ -51,7 +51,7 @@ const LavaBackground = React.memo(() => (
         #66A5AD,
         #C4DFE6
       )`,
-       backgroundSize: "300% 300%",  // Reduced size for performance
+      backgroundSize: "300% 300%",  // Reduced size for performance
     }}
     animate={{
       backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"],
@@ -73,14 +73,14 @@ const LavaBackground = React.memo(() => (
 export default function PublicRegis() {
   /* este estado es para guardar y mostrar los mensajes de error o de exito */
   const [openMensaje, setOpenMensaje] = useState(false);
-  const  [error,setError] = useState(null);
+  const [error, setError] = useState(null);
   /**
    *
    *
    */
   const [showPassword, setShowPassword] = useState(false);
 
-  const [rolSelect ,setRolSelect] = useState();
+  const [rolSelect, setRolSelect] = useState();
   /* estos son los datos del fromulario */
   const [formData, setFormData] = useState({
     nombre: "",
@@ -90,7 +90,7 @@ export default function PublicRegis() {
     telefono: "",
     email: "",
     password: "",
-    estado: true, 
+    estado: true,
     role: "cliente",
     ...(rolSelect === "cliente" && {
       direccion: "",
@@ -106,30 +106,30 @@ export default function PublicRegis() {
     const errorForm = validarFormulario(formData);
     if (errorForm) {
       setError(errorForm);
-     setOpenMensaje(true);
-    }
-    else{
-    if (rolSelect !== "cliente") {
-      setRolSelect();
-    }
-    try {
-      const regis = await axios.post(
-        "http://localhost:3001/api/auth/register",
-        formData
-      );
-      window.location.href = "/loginPublic";
-      setError(regis.data.message || "Error desconocido");
       setOpenMensaje(true);
-    } catch (error) {
+    }
+    else {
+      if (rolSelect !== "cliente") {
+        setRolSelect();
+      }
+      try {
+        const regis = await axios.post(
+          "http://localhost:3001/api/auth/register",
+          formData
+        );
+        window.location.href = "/loginPublic";
+        setError(regis.data.message || "Error desconocido");
+        setOpenMensaje(true);
+      } catch (error) {
 
         setError(error.response.data.message || "Error desconocido");
         setOpenMensaje(true);
-      
-    }
-    
+
+      }
+
     }
   }
-  
+
 
 
 
@@ -137,7 +137,7 @@ export default function PublicRegis() {
 
   function validarFormulario(formData) {
     // Validar nombre y apellido solo letras
-    
+
     /* if (!formData.role || !["cliente", "empleado"].includes(formData.role.toLowerCase())) {
       return "Debes Seleccionar Un Rol";
     } */
@@ -148,16 +148,16 @@ export default function PublicRegis() {
     }
     if (!/^[a-zA-ZáéíóúÁÉÍÓÚñÑ ]+$/.test(formData.apellido)) {
       return "El apellido solo debe contener letras";
-    }if (!/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(formData.email)) { 
+    } if (!/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(formData.email)) {
       return "El email no es válido";
-  }
+    }
     // Validar identificación solo números
     if (!/^[0-9]+$/.test(formData.identificacion)) {
       return "La identificación solo debe contener números";
     }
-  
+
     // Validar teléfono solo números de 10 dígitos
-    if (!/^[0-9]{10}$/.test(formData.telefono)) { 
+    if (!/^[0-9]{10}$/.test(formData.telefono)) {
       return "El teléfono debe contener 10 dígitos";
     }
     if (!/^.{6,}$/.test(formData.password)) {
@@ -188,7 +188,7 @@ export default function PublicRegis() {
           {error}
         </Alert>
       </Snackbar>
-      <LavaBackground/>
+      <LavaBackground />
       <HeaderPublic />
       <Container component="main" maxWidth="xs">
         {/* este es el contenedor donde va el formulario con sus campos */}
@@ -216,26 +216,28 @@ export default function PublicRegis() {
 
 
 
-         
+
           <Box
             sx={{ mt: 3, p: 3 }}
             component="form"
             noValidate
             onSubmit={handleSubmit}
           >
-        
+
             <Grid container spacing={2}>
-              
-
-
-
               <Grid item xs={12} sm={6}>
+               
+
+
+
+
+
                 <TextField
-                 onKeyPress={(e) => {
-                  if (!/['a-z']/.test(e.key)) {
-                    e.preventDefault();
-                  }
-                }}
+                  onKeyPress={(e) => {
+                    if (!/['a-z']/.test(e.key)) {
+                      e.preventDefault();
+                    }
+                  }}
                   autoComplete="given-name"
                   name="nombre"
                   value={formData.nombre}
@@ -253,11 +255,11 @@ export default function PublicRegis() {
               </Grid>
               <Grid item xs={12} sm={6}>
                 <TextField
-                 onKeyPress={(e) => {
-                  if (!/['a-z']/.test(e.key)) {
-                    e.preventDefault();
-                  }
-                }}
+                  onKeyPress={(e) => {
+                    if (!/['a-z']/.test(e.key)) {
+                      e.preventDefault();
+                    }
+                  }}
                   required
                   fullWidth
                   value={formData.apellido}
@@ -268,29 +270,29 @@ export default function PublicRegis() {
                   label="Apellido"
                   name="apellido"
                   autoComplete="family-name"
-                 variant="standard"
+                  variant="standard"
                   focused
                 />
               </Grid>
 
               <Grid item xs={12} sm={6}>
                 <FormControl
-                variant="standard"
-                focused
-                   sx={{ width: "100%", }}>
-                   <InputLabel id="demo-simple-select-filled-label">
+                  variant="standard"
+                  focused
+                  sx={{ width: "100%", }}>
+                  <InputLabel id="demo-simple-select-filled-label">
                     Tipo De Identificacion
-                  </InputLabel> 
+                  </InputLabel>
                   <Select
-                  required
+                    required
                     value={formData.tipIdentidad}
                     onChange={(e) =>
                       setFormData({ ...formData, tipIdentidad: e.target.value })
                     }
-                    
-                    
+
+
                     id="demo-simple-select-filled"
-                   sx={{ width: "100%" }}
+                    sx={{ width: "100%" }}
 
                   >
                     <MenuItem value="">
@@ -304,17 +306,17 @@ export default function PublicRegis() {
               </Grid>
               <Grid item xs={12} sm={6} >
                 <TextField
-                 onKeyPress={(e) => {
-                  if (!/[0-9]/.test(e.key)) {
-                    e.preventDefault();
-                  }
-                }}
-                inputProps={{
-                  maxLength: 10,
-                }}
+                  onKeyPress={(e) => {
+                    if (!/[0-9]/.test(e.key)) {
+                      e.preventDefault();
+                    }
+                  }}
+                  inputProps={{
+                    maxLength: 10,
+                  }}
                   required
                   fullWidth
-                 
+
                   value={formData.identificacion}
                   onChange={(e) =>
                     setFormData({ ...formData, identificacion: e.target.value })
@@ -326,7 +328,7 @@ export default function PublicRegis() {
                   variant="standard"
                   focused
                 />
-              
+
               </Grid>
 
               <Grid item xs={12}>
@@ -344,19 +346,19 @@ export default function PublicRegis() {
                   label="Email"
                   name="email"
                   autoComplete="email"
-                  
+
                 />
               </Grid>
               <Grid item xs={12}>
                 <TextField
-                 onKeyPress={(e) => {
-                  if (!/[0-9]/.test(e.key)) {
-                    e.preventDefault();
-                  }
-                }}
-                inputProps={{
-                  maxLength: 10,
-                }}
+                  onKeyPress={(e) => {
+                    if (!/[0-9]/.test(e.key)) {
+                      e.preventDefault();
+                    }
+                  }}
+                  inputProps={{
+                    maxLength: 10,
+                  }}
                   required
                   fullWidth
                   value={formData.telefono}
@@ -364,7 +366,7 @@ export default function PublicRegis() {
                     setFormData({ ...formData, telefono: e.target.value })
                   }
                   id="telefono"
-                 variant="standard"
+                  variant="standard"
                   focused
                   label="Telefono"
                   name="telefono"
@@ -372,8 +374,8 @@ export default function PublicRegis() {
                 />
               </Grid>
               <Grid item xs={12}>
-              <TextField
-                 variant="standard"
+                <TextField
+                  variant="standard"
                   focused
                   required
                   fullWidth
@@ -402,29 +404,29 @@ export default function PublicRegis() {
 
 
             <center>
-            <Button
-              type="submit"
-              onClick={handleSubmit}
-              fullWidth
-              variant="contained"
-              sx={{
-                mt: 3,
-                mb: 2,
-                width: "60%",
-                borderRadius:20,
-                bgcolor: "#66A5AD", // Cambia el color de fondo del botón
-                color: "white", // Cambia el color del texto del botón
-                "&:hover": {
-                  bgcolor: "#5497A7", // Cambia el color de fondo del botón en hover
-                },
-              }}
-            >
-              Crear Cuenta
-            </Button>
+              <Button
+                type="submit"
+                onClick={handleSubmit}
+                fullWidth
+                variant="contained"
+                sx={{
+                  mt: 3,
+                  mb: 2,
+                  width: "60%",
+                  borderRadius: 20,
+                  bgcolor: "#66A5AD", // Cambia el color de fondo del botón
+                  color: "white", // Cambia el color del texto del botón
+                  "&:hover": {
+                    bgcolor: "#5497A7", // Cambia el color de fondo del botón en hover
+                  },
+                }}
+              >
+                Crear Cuenta
+              </Button>
             </center>
             {/*--------*/}
           </Box>
-        
+
         </Box>
       </Container>
       <br />
