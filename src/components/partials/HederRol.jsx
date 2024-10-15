@@ -1,6 +1,6 @@
 import * as React from "react";
 import {
-  styled, 
+  styled,
   alpha,
   createTheme,
   ThemeProvider,
@@ -31,8 +31,13 @@ import SearchIcon from "@mui/icons-material/Search";
 import AccountCircle from "@mui/icons-material/AccountCircle";
 import TheaterComedyIcon from '@mui/icons-material/TheaterComedy';
 import MoreIcon from "@mui/icons-material/MoreVert";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import "../../assets/admin.css";
+
+
+
+
+
 
 const drawerWidth = 240;
 
@@ -124,22 +129,22 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 const defaultTheme = createTheme();
 
 export default function HeaderRol() {
-/**constante para enrutar a diferentes direcciones */
+  /**constante para enrutar a diferentes direcciones */
   const navigate = useNavigate();
-/*
-*
-*
-* */
+  /*
+  *
+  *
+  * */
 
-/**estado de la anchuro del appbar menu */
+  /**estado de la anchuro del appbar menu */
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
   const isMenuOpen = Boolean(anchorEl);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
-/*
-*
-*
-* */
+  /*
+  *
+  *
+  * */
   const handleProfileMenuOpen = (event) => {
     setAnchorEl(event.currentTarget);
   };
@@ -159,7 +164,7 @@ export default function HeaderRol() {
   const menuId = "primary-search-account-menu";
   const renderMenu = (
     <Menu
-    style={{ background:"transparent" ,opacity:1}}
+      style={{ background: "transparent", opacity: 1 }}
       anchorEl={anchorEl}
       anchorOrigin={{
         vertical: "top",
@@ -174,67 +179,167 @@ export default function HeaderRol() {
       open={isMenuOpen}
       onClose={handleMenuClose}
     >
-     {/*  <MenuItem onClick={handleMenuClose}>Profile</MenuItem> */}
-      <MenuItem sx={{ backgroundColor: "red",borderRadius: "20px"}}  onClick={() => { handleMenuClose(); localStorage.removeItem("token"); window.location.reload();}}>Cerrar Secion</MenuItem>
+      {/*  <MenuItem onClick={handleMenuClose}>Profile</MenuItem> */}
+      <MenuItem sx={{ backgroundColor: "red", borderRadius: "20px" }} onClick={() => { handleMenuClose(); localStorage.removeItem("token"); window.location.reload(); }}>Cerrar Secion</MenuItem>
     </Menu>
   );
 
   const mobileMenuId = "primary-search-account-menu-mobile";
-
+  const location = useLocation();
   const mainListItems = (
     <React.Fragment>
-      <ListItemButton  className="btn-men-lateral" onClick={() => navigate("/admin/dashboard")}>
+      <ListItemButton
+        sx={{
+          ...(location.pathname === "/admin/dashboard")
+            ? {
+              background: "white",
+              color: "black"
+            } : {}
+        }}
+
+
+        className="btn-men-lateral" onClick={() => navigate("/admin/dashboard")}>
         <ListItemIcon>
-          <DashboardIcon className="icon-men-lateral-header" />
+          <DashboardIcon
+            sx={{
+              ...(location.pathname === "/admin/dashboard" ? { color: "#003b46" } : { color: "white" }) // Cambia el color por defecto
+            }}
+            className="icon-men-lateral-header"
+          />
         </ListItemIcon>
         <ListItemText primary="Dashboard" />
       </ListItemButton>
-      <ListItemButton className="btn-men-lateral" onClick={() => navigate("/admin/tabla/admins")}>
+      <ListItemButton
+
+        sx={{
+          ...(location.pathname === "/admin/tabla/admins")
+            ? {
+              background: "white",
+              color: "black"
+            } : {}
+        }}
+        className="btn-men-lateral" onClick={() => navigate("/admin/tabla/admins")}>
         <ListItemIcon>
-        <AdminPanelSettingsIcon className="icon-men-lateral-header"  />
-        
+          <AdminPanelSettingsIcon
+            sx={{
+              ...(location.pathname === "/admin/tabla/admins" ? { color: "#003b46" } : { color: "white" }) // Cambia el color por defecto
+            }}
+            className="icon-men-lateral-header" />
+
         </ListItemIcon>
         <ListItemText primary="Administradores" />
       </ListItemButton>
-      <ListItemButton className="btn-men-lateral" onClick={() => navigate("/admin/tabla/clientes")}>
+      <ListItemButton
+        sx={{
+          ...(location.pathname === "/admin/tabla/clientes")
+            ? {
+              background: "white",
+              color: "black"
+            } : {}
+        }}
+        className="btn-men-lateral" onClick={() => navigate("/admin/tabla/clientes")}>
         <ListItemIcon>
-        <PeopleIcon className="icon-men-lateral-header"  />
+          <PeopleIcon
+            sx={{
+              ...(location.pathname === "/admin/tabla/clientes" ? { color: "#003b46" } : { color: "white" }) // Cambia el color por defecto
+            }}
+            className="icon-men-lateral-header" />
         </ListItemIcon>
         <ListItemText primary="Clientes" />
       </ListItemButton>
-      <ListItemButton className="btn-men-lateral" onClick={() => navigate("/admin/tabla/empleados")}>
+      <ListItemButton
+        sx={{
+          ...(location.pathname === "/admin/tabla/empleados")
+            ? {
+              background: "white",
+              color: "black"
+            } : {}
+        }}
+        className="btn-men-lateral" onClick={() => navigate("/admin/tabla/empleados")}>
         <ListItemIcon>
-          <BadgeIcon className="icon-men-lateral-header"  />
+          <BadgeIcon
+            sx={{
+              ...(location.pathname === "/admin/tabla/empleados" ? { color: "#003b46" } : { color: "white" }) // Cambia el color por defecto
+            }}
+            className="icon-men-lateral-header" />
         </ListItemIcon>
         <ListItemText primary="Empleados" />
       </ListItemButton>
-      <ListItemButton className="btn-men-lateral" onClick={() => navigate("/admin/tabla/salas")}>
+      <ListItemButton
+        sx={{
+          ...(location.pathname === "/admin/tabla/salas")
+            ? {
+              background: "white",
+              color: "black"
+            } : {}
+        }}
+        className="btn-men-lateral" onClick={() => navigate("/admin/tabla/salas")}>
         <ListItemIcon>
-          <StadiumIcon className="icon-men-lateral-header"  />
+          <StadiumIcon
+            sx={{
+              ...(location.pathname === "/admin/tabla/salas" ? { color: "#003b46" } : { color: "white" }) // Cambia el color por defecto
+            }}
+            className="icon-men-lateral-header" />
         </ListItemIcon>
         <ListItemText primary="Salas" />
       </ListItemButton>
-      <ListItemButton className="btn-men-lateral" onClick={() => navigate("/admin/tabla/shows")}>
+      <ListItemButton
+        sx={{
+          ...(location.pathname === "/admin/tabla/shows")
+            ? {
+              background: "white",
+              color: "black"
+            } : {}
+        }}
+        className="btn-men-lateral" onClick={() => navigate("/admin/tabla/shows")}>
         <ListItemIcon>
-        <TheaterComedyIcon className="icon-men-lateral-header"  />
+          <TheaterComedyIcon
+            sx={{
+              ...(location.pathname === "/admin/tabla/shows" ? { color: "#003b46" } : { color: "white" }) // Cambia el color por defecto
+            }}
+            className="icon-men-lateral-header" />
         </ListItemIcon>
         <ListItemText primary="Shows" />
       </ListItemButton>
-      <ListItemButton className="btn-men-lateral" onClick={() => navigate("/admin/tabla/jefesalas")}>
+      <ListItemButton
+        sx={{
+          ...(location.pathname === "/admin/tabla/jefesalas")
+            ? {
+              background: "white",
+              color: "black"
+            } : {}
+        }}
+        className="btn-men-lateral" onClick={() => navigate("/admin/tabla/jefesalas")}>
         <ListItemIcon>
-        <SupervisedUserCircleIcon className="icon-men-lateral-header" />
+          <SupervisedUserCircleIcon
+            sx={{
+              ...(location.pathname === "/admin/tabla/jefesalas" ? { color: "#003b46" } : { color: "white" }) // Cambia el color por defecto
+            }}
+            className="icon-men-lateral-header" />
         </ListItemIcon>
         <ListItemText primary="Jefes De Sala" />
       </ListItemButton>
-      <ListItemButton className="btn-men-lateral" onClick={() => navigate("/admin/tabla/pedidos")}>
+      <ListItemButton
+        sx={{
+          ...(location.pathname === "/admin/tabla/pedidos")
+            ? {
+              background: "white",
+              color: "black"
+            } : {}
+        }}
+        className="btn-men-lateral" onClick={() => navigate("/admin/tabla/pedidos")}>
         <ListItemIcon>
-          <ChecklistIcon  className="icon-men-lateral-header"/>
+          <ChecklistIcon
+            sx={{
+              ...(location.pathname === "/admin/tabla/pedidos" ? { color: "#003b46" } : { color: "white" }) // Cambia el color por defecto
+            }}
+            className="icon-men-lateral-header" />
         </ListItemIcon>
         <ListItemText primary="Pedidos" />
       </ListItemButton>
     </React.Fragment>
   );
-  
+
 
   /* este menu se renderiza en el return */
   /**
@@ -258,8 +363,8 @@ export default function HeaderRol() {
       open={isMobileMenuOpen}
       onClose={handleMobileMenuClose}
     >
-     
-     
+
+
       <MenuItem onClick={handleProfileMenuOpen}>
         <IconButton
           size="large"
@@ -279,7 +384,6 @@ export default function HeaderRol() {
   const toggleDrawer = () => {
     setOpen(!open);
   };
-
   return (
     <ThemeProvider theme={defaultTheme}>
       <AppBar
@@ -304,7 +408,7 @@ export default function HeaderRol() {
 
           <Avatar
             src={logo}
-            sx={{ display: { xs: "flex", md: "flex" }, mr: 1,filter:"invert(1) brightness(100)"  }}
+            sx={{ display: { xs: "flex", md: "flex" }, mr: 1, filter: "invert(1) brightness(100)" }}
           />
           <Search>
             <SearchIconWrapper>
@@ -352,19 +456,19 @@ export default function HeaderRol() {
             alignItems: "center",
             justifyContent: "flex-end",
             px: [1],
-            background:"#003B46",
+            background: "#003B46",
           }}
         >
-          
+
           <IconButton onClick={toggleDrawer}>
             <ChevronLeftIcon className="icon-men-lateral-header" />
           </IconButton>
         </Toolbar>
         <Divider />
-        <List component="nav" sx={{background:"#003B46",height:"100%",color:"white" }}>
+        <List component="nav" sx={{ background: "#003B46", height: "100%", color: "white" }}>
           {mainListItems}
           <Divider sx={{ my: 1 }} />
-         
+
         </List>
       </Drawer>
     </ThemeProvider>

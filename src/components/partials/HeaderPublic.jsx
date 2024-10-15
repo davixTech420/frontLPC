@@ -149,7 +149,20 @@ const location = useLocation();
                  onClick={() => {   rol === 'jefesala' ?  nav("/jefe/dashboard") : rol === 'empleado' ? nav("/empleado/dashboard")  : nav("/cliente/dashboard") }}
                   sx={{ py: '6px', px: '12px' }}
                 >
-                  <Typography variant="body2" color="white">
+                  <Typography variant="body2" color="white"
+                  
+                  sx={{
+                    ...(location.pathname === "/jefe/dashboard") ||
+                    (location.pathname === "/cliente/dashboard") ||
+                    (location.pathname === "/empleado/dashboard")
+                        ? {
+                            border: '2px solid white',
+                            padding: 1,
+                            borderRadius: 5,
+                        } : {}
+                }}
+                  
+                  >
                     Dashboard
                   </Typography>
                 </MenuItem>
@@ -157,7 +170,16 @@ const location = useLocation();
                  onClick={() => nav("/calendario") }
                   sx={{ py: '6px', px: '12px' }}
                 >
-                  <Typography variant="body2" color="white">
+                  <Typography variant="body2" color="white"
+                   sx={{
+                    ...(location.pathname === "/calendario")
+                        ? {
+                            border: '2px solid white',
+                            padding: 1,
+                            borderRadius: 5,
+                        } : {}
+                }}
+                  >
                     Calendario
                   </Typography>
                 </MenuItem>
@@ -165,7 +187,17 @@ const location = useLocation();
                 onClick={() => nav("/teatros") }
                   sx={{ py: '6px', px: '12px' }}
                 >
-                  <Typography variant="body2" color="white">
+                  <Typography variant="body2" color="white"
+                  
+                  sx={{
+                    ...(location.pathname === "/teatros")
+                        ? {
+                            border: '2px solid white',
+                            padding: 1,
+                            borderRadius: 5,
+                        } : {}
+                }}
+                  >
                     Teatros
                   </Typography>
                 </MenuItem>
@@ -173,7 +205,16 @@ const location = useLocation();
 onClick={() => nav("/contacto") }
                   sx={{ py: '6px', px: '12px' }}
                 >
-                  <Typography variant="body2" color="white">
+                  <Typography variant="body2" color="white"
+                   sx={{
+                    ...(location.pathname === "/contacto")
+                        ? {
+                            border: '2px solid white',
+                            padding: 1,
+                            borderRadius: 5,
+                        } : {}
+                }}
+                  >
                     Contactanos
                   </Typography>
                 </MenuItem>
@@ -183,7 +224,17 @@ onClick={() => nav("/contacto") }
                onClick={() => {    rol === 'jefesala' ?  nav("/jefe/mensajes"): nav("/cliente/mensajes") }}
                   sx={{ py: '6px', px: '12px' }}
                 >
-                  <Typography variant="body2" color="white">
+                  <Typography variant="body2" color="white"   
+                  sx={{
+                    ...(location.pathname === "/jefe/mensajes") ||
+                    (location.pathname === "/cliente/mensajes")
+                        ? {
+                            border: '2px solid white',
+                            padding: 1,
+                            borderRadius: 5,
+                        } : {}
+                }}
+                  >
                     Mensajes
                   </Typography>
                 </MenuItem>
@@ -194,7 +245,15 @@ onClick={() => nav("/contacto") }
                onClick={() => {    rol === 'jefesala' ?  nav("/jefe/miSala"): nav("/cliente/misShows") }}
                   sx={{ py: '6px', px: '12px' }}
                 >
-                  <Typography variant="body2" color="white">
+                  <Typography variant="body2" color="white"   sx={{
+                            ...(location.pathname === "/jefe/miSala") ||
+                            (location.pathname === "/cliente/misShows")
+                                ? {
+                                    border: '2px solid white',
+                                    padding: 1,
+                                    borderRadius: 5,
+                                } : {}
+                        }}>
                   {rol == "jefesala" ? "Mi Sala"  : "Mis Shows" }
                   </Typography>
                 </MenuItem>
@@ -418,17 +477,7 @@ onClick={() => nav("/contacto") }
           
             <Button
               onClick={() => nav(buttonRoute)}
-              sx={{
-              borderRadius: 50,
-                my: 2,
-                color: "black",
-                display: "block",
-                backgroundColor: "white",
-                "&:hover": {
-                  backgroundColor: "#C4DFE6", 
-                  boxShadow: "0 3px 5px 2px rgba(255, 105, 135, .3)",
-                },
-              }}
+                sx={{ my: 2, marginRight: 2,color: location.pathname === "/loginPublic" || location.pathname === "/registrar" ? "black" : "white", display: "block",backgroundColor: location.pathname === "/loginPublic" || location.pathname === "/registrar" ? "#C4DFE6" : "" }}
             >
               {buttonText}
             </Button>

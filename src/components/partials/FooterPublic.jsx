@@ -15,12 +15,9 @@ const FooterPublic = (props) => {
 
 const navegar = useNavigate();
 
-
 function nav(path){
   navegar(path);
 }
-
-
 
   return (
     <Box sx={[props.style ,{ color:'white', backgroundColor: '#07575B', padding: '20px' , position: 'flex' , left:0,right:0, bottom: 0, marginTop: 15,borderTopLeftRadius: 50,borderTopRightRadius: 50 ,boxShadow: "10px 10px 10px 10px rgba(0, 0, 0, 0.5)" }]}>
@@ -52,7 +49,7 @@ function nav(path){
             <Typography variant="body2">
               Email: datech@datech
               <br />
-              Phone: +1-234-567-890
+              Phone: +57 324-285-5700
             </Typography>
             <Box sx={{ mt: 2 }}>
               <Button onClick={() => nav("/condiciones")} variant="outlined"  sx={{
@@ -65,7 +62,6 @@ function nav(path){
       }}>
                 Terminos & Condiciones
               </Button>
-             
             </Box>
           </Grid>
         </Grid>
@@ -79,7 +75,6 @@ function nav(path){
     </Box>
   );
 };
-
 export default FooterPublic;
 
 

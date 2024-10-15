@@ -131,7 +131,7 @@ export default function Teatros() {
         TransitionComponent={Fade}
         transitionDuration={{ enter: 500, exit: 500 }}
       >
-        <DialogTitle sx={{ background:"linear-gradient(900deg,#66A5AD,#C4dfe6,white)"}}>
+        <DialogTitle sx={{ background: "linear-gradient(900deg,#66A5AD,#C4dfe6,white)" }}>
           <center>{selectTeatro?.nombre}</center>
           <IconButton
             aria-label="close"
@@ -160,7 +160,7 @@ export default function Teatros() {
                     Jefe De La Sala : {jefeSelect?.nombre}
                   </Typography>
                   <br />
-                 
+
 
                   {rol == "cliente" && (
                     <>
@@ -186,7 +186,7 @@ export default function Teatros() {
             </Grid>
           </Grid>{" "}
           <Grid>
-            <center> 
+            <center>
               <br />
               <Button
                 color="success"
@@ -196,7 +196,7 @@ export default function Teatros() {
                 <LocationOnIcon />
                 Mapa
               </Button>
-              
+
             </center>
             <br />
             <Box sx={{
@@ -205,13 +205,13 @@ export default function Teatros() {
               alignItems: "center",
               height: { xs: "30vh", md: "50vh" },
               width: "100%",
-              
+
             }}>
-            <Map address={selectTeatro?.direccion || selectTeatro?.nombre} />
+              <Map address={selectTeatro?.direccion || selectTeatro?.nombre} />
             </Box>
           </Grid>
         </DialogContent>
-        <DialogActions sx={{ justifyContent: "center",background:"linear-gradient(360deg,#66A5AD,#C4dfe6,white)" }}>
+        <DialogActions sx={{ justifyContent: "center", background: "linear-gradient(360deg,#66A5AD,#C4dfe6,white)" }}>
           <Button
             onClick={() => setOpenTeatro(false)}
             variant="contained"
@@ -263,7 +263,12 @@ export default function Teatros() {
                   borderBottomLeftRadius: 6,
                   borderBottomRightRadius: 6,
                 }}
-                title={sala.nombre}
+                title={
+                  sala.nombre
+                  
+                  
+                  
+                }
                 onClick={() => {
                   setSelectTeatro(sala);
                   setOpenTeatro(true);

@@ -16,6 +16,7 @@ import {
 import { RoleChecker, ProtectedRoute } from "./middleware/RouteProtected";
 import WhatComponent from "./components/pages/component/WhatComponent";
 import { motion} from "framer-motion";
+import TermsAndConditions from "./components/pages/component/Terms";
 
 const CurtainTransition = ({ children }) => {
   const location = useLocation();
@@ -55,7 +56,10 @@ function App() {
           element={
             <>
               <CurtainTransition>
-                <PublicRoutes /> <WhatComponent />
+                <PublicRoutes /> 
+                <TermsAndConditions/>
+                
+                <WhatComponent />
               </CurtainTransition>
             </>
           }
@@ -70,7 +74,11 @@ function App() {
             <>
               <ProtectedRoute>
                 <RoleChecker requiredRole={"cliente"}>
-                  <ClientRoutes /> <WhatComponent />
+                  <ClientRoutes /> 
+                  
+                  <TermsAndConditions/>
+                  <WhatComponent />
+
                 </RoleChecker>
               </ProtectedRoute>
             </>
@@ -82,6 +90,7 @@ function App() {
             <ProtectedRoute>
               <RoleChecker requiredRole={"empleado"}>
                 <EmpleadoRoutes />
+                <TermsAndConditions/>
               </RoleChecker>
             </ProtectedRoute>
           }
@@ -92,6 +101,7 @@ function App() {
           element={
             <ProtectedRoute>
               <RoleChecker requiredRole={"jefesala"}>
+              <TermsAndConditions/>
                 <JefeRoutes />
               </RoleChecker>
             </ProtectedRoute>
@@ -103,13 +113,14 @@ function App() {
             <ProtectedRoute>
               <RoleChecker requiredRole="admin">
                 <AdminRoutes />
+                <TermsAndConditions/>
               </RoleChecker>
             </ProtectedRoute>
           }
         ></Route>
       </Routes>
     </BrowserRouter>
-  );
+  );  
 }
 
 export default App;

@@ -22,6 +22,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import ToggleOffIcon from '@mui/icons-material/ToggleOff';
 import ToggleOnIcon from '@mui/icons-material/ToggleOn';
+import ConfirmationDialog from "../component/Confirmation";
 import {
   FormAdmin,
   FormCliente,
@@ -50,6 +51,7 @@ const VistaTabla = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [data, setData] = useState(null);
+const [openConfirmDialog,setOpenConfirmDialog] = useState(false);
 
   /**
    *
@@ -395,7 +397,7 @@ const VistaTabla = () => {
                            : inactivarRegistros(row.id) }>{row.estado === false ? <ToggleOffIcon sx={{ color: "gray" }} /> : <ToggleOnIcon/> }</Button>
 
                               <Button
-                                onClick={(e) => eliminarRegistros(row.id)}
+                                onClick={(e) => setOpenConfirmDialog(true)}
                               >
                                 <DeleteIcon color="error" />
                               </Button>
@@ -404,6 +406,7 @@ const VistaTabla = () => {
                               </Button>
                             </TableCell>
                           </TableRow>
+                          
                         ))}
                       </TableBody>
                     </Table>
