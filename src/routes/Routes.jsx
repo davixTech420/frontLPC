@@ -15,6 +15,7 @@ import Mensaje from "../components/pages/clientPages/Mensajes";
 import MisShows from "../components/pages/clientPages/MisShows"
 import MiSala from "../components/pages/jefePages/MiSala";
 import EmployeeDashboard from "../components/pages/emplePages/DashboardEmple";
+import ResetPassword from "../components/pages/publicPages/ResetPass";
 
 //aca se manejan todas las rutas publica donde todo el mundo puede ver
 export const PublicRoutes = () => {
@@ -27,7 +28,7 @@ export const PublicRoutes = () => {
       <Route path="/loginPublic" element={<PublicLogin />}></Route>
       <Route path="/registrar" element={<PublicRegis />}></Route>
       <Route path="/calendario" element={<Calendario />}></Route>
-      
+      <Route path="/resetPass/:token" element={<ResetPassword />} />
 
     </Routes>
   );

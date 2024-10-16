@@ -17,9 +17,12 @@ import {
 } from "@mui/material";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
-import { Login } from "../../../services/publicServices";
+import { Login, forgetPass } from "../../../services/publicServices";
 import HeaderPublic from "../../partials/HeaderPublic";
 import FooterPublic from "../../partials/FooterPublic";
+import { FormComponent } from "../adminPages/FormComponent";
+import InputValidate from "../component/ValidateInput";
+
 
 const theme = createTheme({
   palette: {
@@ -57,7 +60,7 @@ const LavaBackground = React.memo(() => (
         #66A5AD,
         #C4DFE6
       )`,
-       backgroundSize: "300% 300%",  // Reduced size for performance
+      backgroundSize: "300% 300%",  // Reduced size for performance
     }}
     animate={{
       backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"],
@@ -78,6 +81,12 @@ const TheaterVolcanicLogin = () => {
   const [formData, setFormData] = useState({ email: "", password: "" });
   const [showPassword, setShowPassword] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+
+
+  /* estos estados son para el cambio de contraseñaabre la alerta que es el formcomponent */
+  const [dialogPassword, setDialogPassword] = useState(false);
+  /** */
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
   const nav = useNavigate();
@@ -99,7 +108,7 @@ const TheaterVolcanicLogin = () => {
           jefesala: "/jefe/dashboard",
           empleado: "/empleado/dashboard",
         };
-       nav(roleToPath[regis.data.role] || "/loginPublic");
+        nav(roleToPath[regis.data.role] || "/loginPublic");
       } catch (error) {
         setError(error.response.data.message);
         setOpenError(true);
@@ -109,8 +118,112 @@ const TheaterVolcanicLogin = () => {
     [formData]
   );
 
+
+
+
+  /*   este fragment de codigo es todo lo relacionado con la alerta y sanckbar
+    de olvidar la contraseña */
+
+  const [texto, setTexto] = useState('')
+  const [openSnackbar, setOpenSnackbar] = useState(false)
+  const [snackbarMessage, setSnackbarMessage] = useState('')
+  const [snackbarSeverity, setSnackbarSeverity] = useState('success')
+
+  const handleSubmitPassword = async (e) => {
+    e.preventDefault();
+    try {
+      forgetPass({ email: texto })
+        .then(() => {
+          setSnackbarMessage('¡Formulario enviado con éxito!');
+          setSnackbarSeverity('success');
+
+        })
+        .catch((error) => {
+          setSnackbarMessage('Error al enviar el formulario');
+          setSnackbarSeverity('error');
+          console.error(error);
+        });
+      setOpenSnackbar(true);
+    } catch (error) {
+      console.log(error);
+    }
+
+  }
+
+  const handleCloseSnackbar = (event, reason) => {
+    if (reason === 'clickaway') {
+      return
+    }
+    setOpenSnackbar(false)
+  }
+  /*  aca termina el codigo de la logica de 
+  olvidar la contraseña
+  */
+
   return (
     <>
+
+      {/* este componente es para que salga la alerta de olvidar Contraseña */}
+      <FormComponent open={dialogPassword} onClose={() => setDialogPassword(false)} title={"Restablecer Contraseña"} children={
+
+        <div className="flex items-center justify-center min-h-screen bg-gray-100">
+          <motion.div
+            initial={{ opacity: 0, y: -50 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+            className="p-8 bg-white rounded-lg shadow-md"
+          >
+            <form className="space-y-4">
+              <InputValidate nombre="email" value={texto} onChange={(e) => setTexto(e.target.value)} />
+
+            </form>
+          </motion.div>
+
+        </div>
+
+
+      } actions={<>
+
+        <Button
+          onClick={handleSubmitPassword}
+          type="submit"
+          variant="contained"
+          color="primary"
+          fullWidth
+        >
+          Enviar
+        </Button>
+      </>} />
+
+      {/* aca termina la alerta de olvidar contraseña */}
+      <AnimatePresence>
+        {openSnackbar && (
+          <motion.div
+            initial={{ opacity: 0, y: 50 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 50 }}
+            className="fixed bottom-4 left-4 right-4"
+          >
+            <Snackbar
+              open={openSnackbar}
+              autoHideDuration={6000}
+              onClose={handleCloseSnackbar}
+              anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+            >
+              <Alert onClose={handleCloseSnackbar} severity={snackbarSeverity} sx={{ width: '100%' }}>
+                {snackbarMessage}
+              </Alert>
+            </Snackbar>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+
+
+
+
+
+
       <Snackbar
         open={openError}
         autoHideDuration={6000}
@@ -132,7 +245,7 @@ const TheaterVolcanicLogin = () => {
         maxWidth={false}
         disableGutters
         sx={{
-         /*  height: "100vh", */
+          /*  height: "100vh", */
           display: "flex",
           alignItems: "center",
           flexDirection: isMobile ? "column" : "row",
@@ -145,19 +258,19 @@ const TheaterVolcanicLogin = () => {
             top: 15,
             display: "flex",
             flexDirection: "column",
-             alignItems: "center",
+            alignItems: "center",
             marginInline: 5,
             borderRadius: "15px",
             padding: 4,
             width: "50%",
-            bgcolor:"white",
+            bgcolor: "white",
             backdropFilter: "blur(50px)",
             boxShadow: "0px 10px 20px rgba(0, 0, 0, 0.8)",
             position: "relative",
             overflow: "hidden",
           }}
         >
-          
+
 
           <motion.div
             initial={{ y: -50, opacity: 0 }}
@@ -176,7 +289,7 @@ const TheaterVolcanicLogin = () => {
             transition={{ delay: 0.8, duration: 0.5 }}
             style={{ width: "100%" }}
           >
-            <Grid  container spacing={2}>
+            <Grid container spacing={2}>
               <Grid item xs={12}>
                 <TextField
                   required
@@ -209,24 +322,25 @@ const TheaterVolcanicLogin = () => {
                           edge="end"
                         >
                           {showPassword ? <VisibilityOff /> : <Visibility />}
-                        </IconButton> 
+                        </IconButton>
                       </InputAdornment>
                     ),
                   }}
                 />
               </Grid>
+              <Grid item xs={12}>
+                <a href="#" onClick={() => setDialogPassword(true)}>¿Olvidaste Tu Contraseña?</a>
+              </Grid>
             </Grid>
             <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
               <center><Button
                 type="submit"
-               
                 variant="contained"
-               
                 sx={{
                   mt: 3,
                   mb: 2,
                   width: "60%",
-                  borderRadius:20,
+                  borderRadius: 20,
                   bgcolor: "#66A5AD", // Cambia el color de fondo del botón
                   color: "white", // Cambia el color del texto del botón
                   "&:hover": {

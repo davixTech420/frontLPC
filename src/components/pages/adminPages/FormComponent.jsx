@@ -10,7 +10,6 @@ import axios from 'axios';
 import { PhotoCamera } from "@mui/icons-material";
 import { SrcImagen } from "../../../services/publicServices";
 import InputValidate from "../component/ValidateInput";
-import { textFieldValidar } from "../../../middleware/FormValidation";
 import {
   Box,
   Grid,

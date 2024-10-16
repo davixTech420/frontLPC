@@ -26,10 +26,14 @@ export const getSalas = () => {
 export const getSalasId = (id) => {
     return axios.get(`${baseUrl}/salas/${id}`);
 }
-   
-
 
 export const getJefeId = (id) => {
     return axios.get(`${baseUrl}/jefe/${id}`);
 }
-   
+
+export const forgetPass = (email) => {
+    return axios.post(`${baseUrl}/forPass`,email);
+}
+export const resetPass = () => {
+
+}
