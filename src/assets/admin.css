@@ -1,0 +1,39 @@
+/* este codigo es parala barra
+lateral del opanel administravtivo
+*
+*
+*/
+.icon-men-lateral-header {
+  color: white ;
+}
+
+.btn-men-lateral:hover {
+  background: white !important;
+  color: black !important;
+}
+
+.btn-men-lateral:hover .icon-men-lateral-header {
+  color: #003b46 !important;
+}
+/**
+  *
+  */
+
+/*
+  *Este codigo es para los 
+  *botones de la parte administrativa 
+  */
+.btn-admin-panel {
+  background: #66A5AD !important; 
+  box-shadow: 0px 8px 12px rgba(0, 0, 0, 0.5);
+  border-radius: 15px !important;
+  color: white !important;
+}
+
+.btn-admin-panel:hover {
+  background: #003B46 !important;
+}
+
+/*
+  *
+  */
