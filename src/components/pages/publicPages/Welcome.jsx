@@ -1,509 +1,471 @@
-import React, { useState, useEffect } from "react";
-import { useTheme } from "@mui/material/styles";
-import useMediaQuery from "@mui/material/useMediaQuery";
-import { AnimatePresence, motion } from "framer-motion";
+import React, { useState, useEffect } from 'react'
+import { ThemeProvider, createTheme, responsiveFontSizes } from '@mui/material/styles'
+import { AnimatePresence, motion } from 'framer-motion'
 import {
   Box,
   Container,
-  Grid,
-  Card,
-  CardContent,
   Typography,
   Button,
   IconButton,
   Chip,
-  Avatar,
-} from "@mui/material";
+  useMediaQuery,
+  CircularProgress,
+  TextField,
+  InputAdornment,
+} from '@mui/material'
 import {
   ChevronLeft,
   ChevronRight,
   CalendarToday,
   AccessTime,
   LocationOn,
-} from "@mui/icons-material";
-import Map from "../component/Map";
-import FooterPublic from "../../partials/FooterPublic";
+  Search,
+  Favorite,
+  FavoriteBorder,
+} from '@mui/icons-material'
+
+// Assuming these functions are imported from your services
+import { SrcImagen, getShows, getSalasId } from '../../../services/publicServices'
 import HeaderPublic from "../../partials/HeaderPublic";
+import FooterPublic from '../../partials/FooterPublic'
+import Map from "../component/Map";
 import "../../../assets/public.css";
-import {
-  SrcImagen,
-  getShows,
-  getSalasId,
-} from "../../../services/publicServices"; // Assuming these functions are exported from an api.js file
-// Assuming these functions are exported from an api.js file
 
-export default function ModernIndexPage() {
-  const [shows, setShows] = useState([]);
-  const [nextShow, setNextShow] = useState(null);
-  const [nextSala,setNextSala]= useState(null);
-  const [currentShowIndex, setCurrentShowIndex] = useState(0);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState(null);
+let theme = createTheme({
+  palette: {
+    primary: {
+      main: '#1A5F7A',
+    },
+    secondary: {
+      main: '#FFC300',
+    },
+    background: {
+      default: '#F8F9FA',
+      paper: '#FFFFFF',
+    },
+    text: {
+      primary: '#2C3E50',
+      secondary: '#34495E',
+    },
+  },
+  typography: {
+    fontFamily: '"Poppins", "Roboto", "Helvetica", "Arial", sans-serif',
+    h1: {
+      fontWeight: 700,
+    },
+    h2: {
+      fontWeight: 600,
+    },
+    h3: {
+      fontWeight: 600,
+    },
+  },
+  components: {
+    MuiButton: {
+      styleOverrides: {
+        root: {
+          borderRadius: 8,
+          textTransform: 'none',
+          fontWeight: 600,
+          padding: '10px 20px',
+        },
+      },
+    },
+    MuiChip: {
+      styleOverrides: {
+        root: {
+          borderRadius: 16,
+        },
+      },
+    },
+  },
+})
 
-  const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+theme = responsiveFontSizes(theme)
+
+export default function MinimalistEventShowcase() {
+  const [shows, setShows] = useState([])
+  const [nextShow, setNextShow] = useState(null)
+  const [currentShowIndex, setCurrentShowIndex] = useState(0)
+  const [isLoading, setIsLoading] = useState(true)
+  const [error, setError] = useState(null)
+  const [searchTerm, setSearchTerm] = useState('')
+  const [favorites, setFavorites] = useState([])
+
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'))
 
   useEffect(() => {
     const fetchShows = async () => {
       try {
-        setIsLoading(true);
-        const response = await getShows();
-        setShows(response.data);
+        setIsLoading(true)
+        const response = await getShows()
+        setShows(response.data)
 
-        // Find the next show
         const closestShow = response.data.reduce((closest, currentShow) => {
-          const currentDate = new Date();
-          const showDate = new Date(currentShow.fechaPresentar);
+          const currentDate = new Date()
+          const showDate = new Date(currentShow.fechaPresentar)
 
-          if (showDate <= currentDate) {
-            return closest;
-          }
+          if (showDate <= currentDate) return closest
+          if (!closest) return currentShow
 
-          if (!closest) {
-            return currentShow;
-          }
-
-          const closestDate = new Date(closest.fechaPresentar);
-          return showDate < closestDate ? currentShow : closest;
-        }, null);
+          const closestDate = new Date(closest.fechaPresentar)
+          return showDate < closestDate ? currentShow : closest
+        }, null)
 
         if (closestShow) {
-          const salaInfo = await getSalasId(closestShow.salaId);
-          const showWithSalaInfo = {
-            ...closestShow,
-            sala: salaInfo,
-          };
-          setNextShow(showWithSalaInfo);
+          const salaInfo = await getSalasId(closestShow.salaId)
+          setNextShow({ ...closestShow, sala: salaInfo })
         }
 
-        setIsLoading(false);
+        setIsLoading(false)
       } catch (error) {
-        console.error(error);
-        setError("Failed to fetch shows. Please try again later.");
-        setIsLoading(false);
+        console.error(error)
+        setError('Failed to fetch shows. Please try again later.')
+        setIsLoading(false)
       }
-    };
-
-    fetchShows();
-  }, []);
-
- /*  useEffect(() => {
-    const obteSala = async () => {
-    console.log("proximo",nextShow);
-      const res = await getSalasId(nextShow?.id)
-      
-      console.log("desde la sala",res);
-      
     }
-obteSala();
-  },[nextShow]); */
+
+    fetchShows()
+  }, [])
 
   const nextShowHandler = () => {
-    setCurrentShowIndex((prevIndex) => (prevIndex + 1) % shows.length);
-  };
+    setCurrentShowIndex((prevIndex) => (prevIndex + 1) % shows.length)
+  }
 
   const prevShowHandler = () => {
-    setCurrentShowIndex(
-      (prevIndex) => (prevIndex - 1 + shows.length) % shows.length
-    );
-  };
+    setCurrentShowIndex((prevIndex) => (prevIndex - 1 + shows.length) % shows.length)
+  }
 
   const formatDate = (dateString) => {
-    const date = new Date(dateString);
-    return date.toLocaleDateString("es-ES", {
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-      timeZone: "UTC",
-    });
-  };
+    return new Date(dateString).toLocaleDateString('es-ES', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+      timeZone: 'UTC',
+    })
+  }
 
-  const formatTime = (dateString) => {
-    const date = new Date(dateString);
-    return date.toLocaleTimeString("es-ES", {
-      hour: "2-digit",
-      minute: "2-digit",
-      timeZone: "UTC",
-    });
-  };
-  console.log(shows);
+  const formatTime = (timeString) => {
+    return timeString
+  }
 
-  const getGoogleMapsUrl = (address) => {
-    return `https://www.google.com/maps/embed/v1/place?key=YOUR_GOOGLE_MAPS_API_KEY&q=${encodeURIComponent(
-      address
-    )}`;
-  };
+  const toggleFavorite = (showId) => {
+    setFavorites((prevFavorites) =>
+      prevFavorites.includes(showId)
+        ? prevFavorites.filter((id) => id !== showId)
+        : [...prevFavorites, showId]
+    )
+  }
+
+  const filteredShows = shows.filter((show) =>
+    show.nombre.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
 
   if (isLoading) {
     return (
-      <Box
-        sx={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          height: "100vh",
-        }}
-      >
-        Loading...
+      <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+        <CircularProgress />
       </Box>
-    );
+    )
   }
 
   if (error) {
     return (
-      <Box
-        sx={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          height: "100vh",
-        }}
-      >
-        {error}
+      <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+        <Typography color="error">{error}</Typography>
       </Box>
-    );
+    )
   }
 
-  const currentShow = shows[currentShowIndex];
-  const daysUntilNextShow = nextShow
-    ? Math.ceil(
-        (new Date(nextShow.fechaPresentar).getTime() - new Date().getTime()) /
-          (1000 * 3600 * 24)
-      )
-    : null;
+  const currentShow = shows[currentShowIndex]
 
   return (
-    <>
-      <Box
-        sx={{
-          minHeight: "100vh",
-          background:
-            "linear-gradient(45deg ,#C4dfe6,#66A5AD ,#07575B ,#003B46)",
-        }}
-      >
-        <HeaderPublic/>
-        <Container maxWidth="lg" sx={{ mt: 4 }}>
-          <Grid container spacing={4}>
-            <Grid item xs={12} md={8} >
-              <Card
+
+
+
+    <Box sx={{ background: "linear-gradient(45deg ,#C4dfe6,#66A5AD ,#07575B ,#003B46)" }}>
+      <HeaderPublic />
+      <ThemeProvider theme={theme}>
+
+        <Box sx={{
+          minHeight: '100vh'
+        }}>
+
+          <Container maxWidth="lg" sx={{ py: 4 }}>
+            <Typography variant="h3" component="h1" sx={{ fontWeight: 700, color: 'white', mb: 4, textAlign: 'center' }}>
+              Descubre Eventos Increíbles
+            </Typography>
+
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5 }}
+            >
+              <Box
                 sx={{
-                  boxShadow: "0px 10px 20px rgba(0, 0, 0, 0.5)",
-                  background: "rgba(255, 255, 255)",
-                  backdropFilter: "blur(10px)",
-                  borderRadius: theme.shape.borderRadius * 2,
+                  position: 'relative',
+                  height: isMobile ? 400 : 500,
+                  borderRadius: 4,
+                  overflow: 'hidden',
+                  boxShadow: '0 10px 30px rgba(0, 0, 0, 0.1)',
                 }}
               >
-                <CardContent sx={{ padding: theme.spacing(4) }}>
-                  <Box
-                    sx={{
-                      position: "relative",
-                      marginBottom: theme.spacing(4),
-                    }}
+                <AnimatePresence mode="wait">
+                  <motion.div
+                    key={currentShowIndex}
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 0.5 }}
+                    style={{ position: 'absolute', width: '100%', height: '100%' }}
                   >
-                    <AnimatePresence mode="wait">
-                      <motion.div
-                        key={currentShowIndex}
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        exit={{ opacity: 0 }}
-                        transition={{ duration: 0.5 }}
-                      >
-                        <Box
-                          component="img"
-                          src={
-                            SrcImagen(currentShow?.imagen) ||
-                            "/placeholder.svg?height=300&width=400"
-                          }
-                        alt={currentShow?.titulo}
-                          sx={{
-                            width: "100%",
-                            height: 300,
-                            objectFit: "cover",
-                            borderRadius: theme.shape.borderRadius,
-                          }}
-                        />
-                      </motion.div>
-                    </AnimatePresence>
                     <Box
+                      component="img"
+                      src={SrcImagen(currentShow?.imagen) || '/placeholder.svg?height=500&width=1000'}
+                      alt={currentShow?.titulo}
                       sx={{
-                        position: "absolute",
-                        top: 0,
-                        left: 0,
-                        right: 0,
-                        bottom: 0,
-                        background:
-                          "linear-gradient(to top, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0) 100%)",
-                        display: "flex",
-                        flexDirection: "column",
-                        justifyContent: "flex-end",
-                        padding: theme.spacing(2),
-                        borderRadius: theme.shape.borderRadius,
+                        width: '100%',
+                        height: '100%',
+                        objectFit: 'cover',
                       }}
-                    >
-                      <Typography
-                        variant="h3"
-                        component="h1"
-                        sx={{ color: "white", fontWeight: "bold", mb: 1 }}
-                      >
-                        {currentShow?.titulo}
+                    />
+                  </motion.div>
+                </AnimatePresence>
+                <Box
+                  sx={{
+                    position: 'absolute',
+                    top: 0,
+                    left: 0,
+                    right: 0,
+                    bottom: 0,
+                    background: 'linear-gradient(to top, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0) 100%)',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    justifyContent: 'flex-end',
+                    p: 4,
+                  }}
+                >
+                  <Typography variant="h3" sx={{ color: 'white', mb: 2 }}>
+                    {currentShow?.titulo}
+                  </Typography>
+                  <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1, mb: 3 }}>
+                    {currentShow?.tags &&
+                      currentShow.tags.map((tag, index) => (
+                        <Chip
+                          key={index}
+                          label={tag}
+                          size="small"
+                          sx={{ backgroundColor: 'rgba(255, 255, 255, 0.2)', color: 'white' }}
+                        />
+                      ))}
+                  </Box>
+                  <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 3, color: 'white', mb: 3 }}>
+                    <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                      <CalendarToday sx={{ mr: 1, fontSize: 20 }} />
+                      <Typography variant="body1">{formatDate(currentShow?.fechaPresentar)}</Typography>
+                    </Box>
+                    <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                      <AccessTime sx={{ mr: 1, fontSize: 20 }} />
+                      <Typography variant="body1">{formatTime(currentShow?.horaInicio)}</Typography>
+                    </Box>
+                    <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                      <LocationOn sx={{ mr: 1, fontSize: 20 }} />
+                      <Typography variant="body1">
+                        {currentShow?.sala ? currentShow.sala.direccion : 'Bogotá D.C'}
                       </Typography>
-                      <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1 }}>
-                        {currentShow?.tags &&
-                          currentShow.tags.map((tag, index) => (
-                            <Chip
-                              key={index}
-                              label={tag}
-                              size="small"
-                              sx={{
-                                backgroundColor: "rgba(255, 255, 255)",
-                                color: "white",
-                              }}
-                            />
-                          ))}
-                      </Box>
                     </Box>
                   </Box>
+                  <Button
+                    variant="contained"
+                    size="large"
+                    className="botnWelcome"
 
-                  <Grid
-                    container
-                    spacing={2}
-                    sx={{ marginBottom: theme.spacing(3) }}
-                  >
-                    <Grid item xs={12} sm={4}>
-                      <Box sx={{ display: "flex", alignItems: "center" }}>
-                        <CalendarToday
-                         className="colorPrimaIcon"
-                          sx={{ marginRight: 1}}
-                        />
-                        <Typography variant="body1">
-                          {formatDate(currentShow?.fechaPresentar)}
-                        </Typography>
-                      </Box>
-                    </Grid>
-                    <Grid item xs={12} sm={4}>
-                      <Box sx={{ display: "flex", alignItems: "center" }}>
-                        <AccessTime
-                        className="colorPrimaIcon"
-                          sx={{ marginRight: 1 }}
-                        />
-                        <Typography variant="body1">
-                          {currentShow?.horaInicio}
-                        </Typography>
-                      </Box>
-                    </Grid>
-                    <Grid item xs={12} sm={4}>
-                      <Box sx={{ display: "flex", alignItems: "center" }}>
-                        <LocationOn
-                         className="colorPrimaIcon"
-                          sx={{ marginRight: 1 }}
-                        />
-                        <Typography variant="body1">
-                          {currentShow?.sala ? currentShow.sala.direccion : "Bogota D.C"}
-                        </Typography>
-                      </Box>
-                    </Grid>
-                  </Grid>
-
-                  <Box
-                    sx={{
-                      display: "flex",
-                      justifyContent: "space-between",
-                      alignItems: "center",
+                    onClick={() => {
+                      window.location.href = 'https://tuboleta.com/'
                     }}
                   >
-                    <IconButton
-                      onClick={prevShowHandler}
-                      sx={{ color: "primary.main" }}
-                    >
-                      <ChevronLeft className="colorPrimaIcon" />
-                    </IconButton>
-                    <motion.div
-                      whileHover={{ scale: 1.05 }}
-                      whileTap={{ scale: 0.95 }}
-                    >
+                    Reservar Ahora
+                  </Button>
+                </Box>
+                <Box
+                  sx={{
+                    position: 'absolute',
+                    top: '50%',
+                    left: 0,
+                    right: 0,
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    px: 2,
+                  }}
+                >
+                  <IconButton onClick={prevShowHandler} sx={{ color: 'white' }}>
+                    <ChevronLeft />
+                  </IconButton>
+                  <IconButton onClick={nextShowHandler} sx={{ color: 'white' }}>
+                    <ChevronRight />
+                  </IconButton>
+                </Box>
+              </Box>
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.2 }}
+            >
+              <Box sx={{ mt: 6, mb: 4 }}>
+                <TextField
+                  fullWidth
+                  variant="outlined"
+                  placeholder="Buscar eventos..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  InputProps={{
+                    startAdornment: (
+                      <InputAdornment position="start">
+                        <Search />
+                      </InputAdornment>
+                    ),
+                  }}
+                  sx={{
+                    '& .MuiOutlinedInput-root': {
+                      borderRadius: 8,
+                      backgroundColor: 'background.paper',
+                    },
+                  }}
+                />
+              </Box>
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.4 }}
+            >
+              <Typography variant="h5" sx={{ fontWeight: 600, mb: 3 , color:"white"}}>
+                Próximos Eventos
+              </Typography>
+              <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(250px, 1fr))', gap: 3 }}>
+                {filteredShows.map((show) => (
+                  <Box
+                    key={show.id}
+                    sx={{
+                      bgcolor: 'background.paper',
+                      borderRadius: 2,
+                      overflow: 'hidden',
+                      boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)',
+                      transition: 'all 0.3s ease-in-out',
+                      '&:hover': {
+                        transform: 'translateY(-4px)',
+                        boxShadow: '0 6px 20px rgba(0, 0, 0, 0.15)',
+                      },
+                    }}
+                  >
+                    <Box sx={{ position: 'relative' }}>
+                      <Box
+                        component="img"
+                        src={SrcImagen(show.imagen) || '/placeholder.svg?height=150&width=250'}
+                        alt={show.titulo}
+                        sx={{ width: '100%', height: 150, objectFit: 'cover' }}
+                      />
+                      <IconButton
+                        sx={{
+                          position: 'absolute',
+                          top: 8,
+                          right: 8,
+                          backgroundColor: 'rgba(255, 255, 255, 0.8)',
+                          '&:hover': { backgroundColor: 'rgba(255, 255, 255, 1)' },
+                        }}
+                        onClick={() => toggleFavorite(show.id)}
+                      >
+                        {favorites.includes(show.id) ? (
+                          <Favorite sx={{ color: 'secondary.main' }} />
+                        ) : (
+                          <FavoriteBorder />
+                        )}
+                      </IconButton>
+                    </Box>
+                    <Box sx={{ p: 2 }}>
+                      <Typography variant="h6" sx={{ fontWeight: 600, mb: 1 }}>
+                        {show.titulo}
+                      </Typography>
+                      <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+                        {formatDate(show.fechaPresentar)}
+                      </Typography>
+                      <Button
+                        fullWidth
+                        variant="outlined"
+                        color="primary"
+                        onClick={() => {
+                          window.location.href = 'https://tuboleta.com/'
+                        }}
+                      >
+                        Ver Detalles
+                      </Button>
+                    </Box>
+                  </Box>
+                ))}
+              </Box>
+            </motion.div>
+
+            {nextShow && (
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: 0.6 }}
+              >
+                <Box sx={{ mt: 6, p: 4, bgcolor: 'background.paper', borderRadius: 4, boxShadow: '0 10px 30px rgba(0, 0, 0, 0.1)' }}>
+                  <Typography variant="h4" sx={{ fontWeight: 700, color: 'primary.main', mb: 3 }}>
+                    No Te Pierdas Nuestro Próximo  Gran Evento
+                  </Typography>
+                  <Box sx={{ display: 'flex', flexDirection: isMobile ? 'column' : 'row', gap: 4 }}>
+                    <Box sx={{ flex: 1 }}>
+                      <Typography variant="h5" sx={{ mb: 2 }}>{nextShow.titulo}</Typography>
+                      <Typography variant="body1" paragraph>
+                        <CalendarToday sx={{ mr: 1, verticalAlign: 'middle', color: 'primary.main' }} />
+                        {formatDate(nextShow.fechaPresentar)}
+                      </Typography>
+                      <Typography variant="body1" paragraph>
+                        <AccessTime sx={{ mr: 1, verticalAlign: 'middle', color: 'primary.main' }} />
+                        {nextShow.horaInicio}
+                      </Typography>
+                      <Typography variant="body1" paragraph>
+                        <LocationOn sx={{ mr: 1, verticalAlign: 'middle', color: 'primary.main' }} />
+                        {nextShow.sala ? nextShow.sala.data.direccion : 'Bogotá D.C'}
+                      </Typography>
                       <Button
                         variant="contained"
                         size="large"
                         className="botnWelcome"
-                        sx={{
-                          "&:hover": {
-                            backgroundColor: "primary.dark",
-                          },
-                        }}
                         onClick={() => {
-                          window.location.href= "https://tuboleta.com/"
+                          window.location.href = 'https://tuboleta.com/'
                         }}
                       >
-                        Reservar Ahora
+                        Asegura Tu Entrada
                       </Button>
-                    </motion.div>
-                    <IconButton
-                      onClick={nextShowHandler}
-                       className="colorPrimaIcon"
-                      sx={{ color: "primary.main" }}
-                    >
-                      <ChevronRight />
-                    </IconButton>
-                  </Box>
-                </CardContent>
-              </Card>
-            </Grid>
-
-            <Grid item xs={12} md={4}>
-              <Card
-                sx={{
-                  boxShadow: "0px 10px 20px rgba(0, 0, 0, 0.5)",
-                  background: "rgba(255, 255, 255)",
-                  backdropFilter: "blur(10px)",
-                  borderRadius: theme.shape.borderRadius * 2,
-                }}
-              >
-                <CardContent>
-                  <Typography variant="h5" gutterBottom>
-                    Próximos Eventos
-                  </Typography>
-                  {shows.map((show, index) => (
+                    </Box>
                     <Box
-                      key={show.id}
-                      sx={{ display: "flex", alignItems: "center", mb: 2 }}
+                      sx={{
+                        flex: 1,
+                        height: 250,
+                        borderRadius: 2,
+                        overflow: 'hidden',
+                        boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)',
+                      }}
                     >
-                      <Avatar
-                        src={
-                          SrcImagen(show.imagen) ||
-                          "/placeholder.svg?height=48&width=48"
-                        }
-                        sx={{ width: 48, height: 48, mr: 2 }}
-                      />
-                      <Box>
-                        <Typography variant="subtitle1">
-                          {show.titulo}
-                        </Typography>
-                        <Typography variant="body2" color="text.secondary">
-                          {formatDate(show.fechaPresentar)}
-                        </Typography>
+                      <Box sx={{ width: "100%", height: "100%", obejectFit: "cover" }}>
+                        <Map address={"Teatro Colon"} />
                       </Box>
                     </Box>
-                  ))}
-                </CardContent>
-              </Card>
-
-              <Card
-                sx={{
-                  mt: 2,
-                  boxShadow: "0px 10px 20px rgba(0, 0, 0, 0.5)",
-                  background: "rgba(255, 255, 255)",
-                  backdropFilter: "blur(10px)",
-                  borderRadius: theme.shape.borderRadius * 2,
-                }}
-              >
-                <CardContent>
-                  <Typography variant="h5" gutterBottom>
-                    Inicia Secion
-                  </Typography>
-                  <Typography variant="body2" paragraph>
-                    Agenda Tu Show Y Ve Los Shos Cercanos
-                  </Typography>
-                 
-                  <Button className="botnWelcome" fullWidth variant="contained" sx={{ mt: 2 }} onClick={() => window.location.href = '/loginPublic'}>
-                    Login
-                  </Button>
-                </CardContent>
-              </Card>
-            </Grid>
-          </Grid>
-
-          {nextShow && (
-            <Card
-              sx={{
-                mt: 4,
-                boxShadow: "0px 10px 20px rgba(0, 0, 0, 0.5)",
-                background: "rgba(255, 255, 255)",
-                backdropFilter: "blur(10px)",
-                borderRadius: theme.shape.borderRadius * 2,
-              }}
-            >
-              <CardContent>
-                <Typography
-                  variant="h4"
-                  gutterBottom
-                  sx={{ color: "primary.main" }}
-                >
-                  Próximo Show: {nextShow.titulo}
-                </Typography>
-                <Typography variant="h6" gutterBottom>
-                  ¡Faltan solo {daysUntilNextShow} días!
-                </Typography>
-                <Grid container spacing={2}>
-                  <Grid item xs={12} md={4}>
-                    <Typography variant="body1" paragraph>
-                      <strong>Fecha:</strong>{" "}
-                      {formatDate(nextShow.fechaPresentar)}
-                    </Typography>
-                    <Typography variant="body1" paragraph>
-                      <strong>Hora:</strong>{" "}
-                      {nextShow.horaInicio}
-                    </Typography>
-                    <Typography variant="body1" paragraph>
-                      <strong>Ubicación:</strong>{" "}
-                      {nextShow.sala ? nextShow.sala.data.direccion : "Bogota D.C"}
-                    </Typography>
-                    <Typography variant="body1" paragraph>
-                      <strong>Dirección:</strong>{" "}
-                      {nextShow.sala ? nextShow.sala.data.direccion : "TBA"}
-                    </Typography>
-                    <Box
-                      sx={{ display: "flex", flexWrap: "wrap", gap: 1, mb: 2 }}
-                    >
-                      {nextShow.tags &&
-                        nextShow.tags.map((tag, index) => (
-                          <Chip
-                            key={index}
-                            label={tag}
-                            size="small"
-                            sx={{
-                              backgroundColor: "primary.main",
-                              color: "white",
-                            }}
-                          />
-                        ))}
-                    </Box>
-                    <Button
-                      variant="contained"
-                      size="large"
-                      sx={{
-                        backgroundColor: "primary.main",
-                        "&:hover": {
-                          backgroundColor: "primary.dark",
-                        },
-                      }}
-                      onClick={() => {
-                        window.location.href= "https://tuboleta.com/"
-                      }}
-                    >
-                      Comprar Entradas
-                    </Button>
-                  </Grid>
-                  <Grid item xs={12} md={8}>
-                    <Box
-                      sx={{
-                        width: "150%",
-                        height: 300,
-                        position: "relative",
-                        justifyContent: "center",
-                        alignContent: "center",
-                      }}
-                    >
-                      <Map address={"Teatro Colon"} />
-                    </Box>
-                  </Grid>
-                </Grid>
-              </CardContent>
-            </Card>
-          )}
-        </Container>
-
+                  </Box>
+                </Box>
+              </motion.div>
+            )}
+          </Container>
+        </Box>
         <FooterPublic />
-      </Box>
-    </>
-  );
+      </ThemeProvider>
+    </Box>
+  )
 }

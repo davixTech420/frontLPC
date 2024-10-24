@@ -41,7 +41,7 @@ export default function Teatros() {
   const [openTeatro, setOpenTeatro] = useState(false);
   const [jefeSelect, setJefeSelect] = useState();
 
-  console.log(selectTeatro);
+  
 
   useEffect(() => {
     const token = localStorage.getItem("token");

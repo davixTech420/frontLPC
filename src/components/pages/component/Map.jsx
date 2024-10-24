@@ -82,7 +82,7 @@ export default function Map({ address }) {
       ref={mapContainerRef}
       style={{
         boxShadow: "0px 10px 20px rgba(0, 0, 0, 0.5)",
-         width: "50%",
+         width: "100%",
         height: "100%", 
         borderRadius: 20,
         marginInline: 20,
