@@ -1,4 +1,4 @@
- import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import axios from "axios";
 import { useParams } from "react-router-dom";
 import HeaderRol from "../../partials/HederRol";
@@ -8,7 +8,10 @@ import {
   Toolbar,
   Grid,
   Button,
+  Snackbar,
 } from "@mui/material";
+
+import MuiAlert from '@mui/material/Alert';
 import {
   FormAdmin,
   FormCliente,
@@ -23,13 +26,16 @@ import {
   eliminarCliente,
   eliminarEmpleado,
   eliminarShow,
+  eliminarPedido,
+  eliminarJefe,
   activarShow,
   inactivarShow,
-  eliminarJefe,
+  cambiarRolUsuario,
 } from "../../../services/AdminServices";
 import TablaMejorada from "../component/Tabla";
 import { SrcImagen } from "../../../services/publicServices";
 import "../../../assets/admin.css";
+
 const VistaTabla = () => {
   const { tablaId } = useParams();
   const [selectedRow, setSelectedRow] = useState(null);
@@ -39,25 +45,15 @@ const VistaTabla = () => {
   const [data, setData] = useState(null);
   const [openConfirmDialog, setOpenConfirmDialog] = useState(false);
   const [triggerUpdate, setTriggerUpdate] = useState(0);
-  /**
-   *
-   *
-   *  * este codigo es para seleccionar el cliente a editar *
-   * *
-   * */
+  const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'success' });
+
   const handleEdit = (row) => {
-    setSelectedRow(row); // Guardar el registro seleccionado en el estado
-    setOpenForm(true); // Abrir el formulario
+    setSelectedRow(row);
+    setOpenForm(true);
   };
-  /**
-   *
-   *
-   * aca termina
-   *
-   */
-  const fetchData = async () => {
+
+  const fetchData = useCallback(async () => {
     try {
-      // Agregar cabeceras de autenticación si es necesario
       const response = await axios.get(
         `http://localhost:3001/api/admin/tabla/${tablaId}`,
         {
@@ -71,25 +67,34 @@ const VistaTabla = () => {
     } catch (error) {
       setError(error.message);
       setLoading(false);
-      // Manejar el error 403 de forma específica
       if (error.response && error.response.status === 403) {
         console.error("Acceso prohibido");
-        // Mostrar un mensaje al usuario o redirigir
       }
     }
-  };
+  }, [tablaId]);
 
-  const actualizarDatos = () => {
+  const actualizarDatos = useCallback(() => {
     setTriggerUpdate((prev) => prev + 1);
-  }
+  }, []);
 
   useEffect(() => {
     fetchData();
-  }, [tablaId, triggerUpdate]);
+  }, [fetchData, triggerUpdate]);
+
+  const showSnackbar = (message, severity) => {
+    setSnackbar({ open: true, message, severity });
+  };
+
+  const handleCloseSnackbar = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+    setSnackbar({ ...snackbar, open: false });
+  };
 
   const eliminarRegistros = async (id) => {
-    let resDel;
     try {
+      let resDel;
       switch (tablaId) {
         case "salas":
           resDel = await eliminarSala(id);
@@ -110,141 +115,94 @@ const VistaTabla = () => {
           resDel = await eliminarJefe(id);
           break;
         default:
-          return <div>Ha Ocurrido Un Error</div>;
-          break;
+          throw new Error("Tabla no reconocida");
       }
-      fetchData();
+      actualizarDatos();
+      showSnackbar("Registro Eliminado con éxito", "success");
     } catch (error) {
       console.error(error);
+      showSnackbar("Error al eliminar el registro", "error");
     }
   };
 
-
-
   const activarRegistros = async (id) => {
-    let resDel;
     try {
+      let resDel;
       switch (tablaId) {
-        case "salas":
-          resDel = await eliminarSala(id);
-          fetchData();
-          break;
-        case "admins":
-          resDel = await eliminarAdmin(id);
-          break;
-        case "clientes":
-          resDel = await eliminarCliente(id);
-          break;
-        case "empleados":
-          resDel = await eliminarEmpleado(id);
-          break;
         case "shows":
           resDel = await activarShow(id);
           break;
-        case "jefesalas":
-          resDel = await eliminarJefe(id);
-          break;
         default:
-          return <div>Ha Ocurrido Un Error</div>;
-          break;
+          throw new Error("Operación no soportada para esta tabla");
       }
-      fetchData();
+      actualizarDatos();
+      showSnackbar("Registro activado con éxito", "success");
     } catch (error) {
       console.error(error);
+      showSnackbar("Error al activar el registro", "error");
     }
   };
-
 
   const inactivarRegistros = async (id) => {
-    let resDel;
     try {
+      let resDel;
       switch (tablaId) {
-        case "salas":
-          resDel = await eliminarSala(id);
-          fetchData();
-          break;
-        case "admins":
-          resDel = await eliminarAdmin(id);
-          break;
-        case "clientes":
-          resDel = await eliminarCliente(id);
-          break;
-        case "empleados":
-          resDel = await eliminarEmpleado(id);
-          break;
         case "shows":
-          resDel = await eliminarShow(id);
-          break;
-        case "jefesalas":
-          resDel = await eliminarJefe(id);
+          resDel = await inactivarShow(id);
           break;
         default:
-          return <div>Ha Ocurrido Un Error</div>;
-          break;
+          throw new Error("Operación no soportada para esta tabla");
       }
-      fetchData();
-
+      actualizarDatos();
+      showSnackbar("Registro inactivado con éxito", "success");
     } catch (error) {
       console.error(error);
+      showSnackbar("Error al inactivar el registro", "error");
     }
   };
+
+  const cambiarRolRegistros = async (id, rol) => {
+    try {
+      let resDel;
+      resDel = await cambiarRolUsuario(id, rol);
+      actualizarDatos();
+      showSnackbar("Rol Cambiado Con éxito", "success");
+    } catch (error) {
+      console.error(error);
+      showSnackbar("Error Al Cambiar el rol", "error");
+    }
+  };
+
   const renderForm = (tablaId) => {
+    const commonProps = {
+      open: openForm,
+      close: () => setOpenForm(false),
+      record: selectedRow,
+      onSubmitSuccess: () => {
+        actualizarDatos();
+        setOpenForm(false);
+        showSnackbar("Operación realizada con éxito", "success");
+      },
+    };
+
     switch (tablaId) {
       case "admins":
-        return (
-          <FormAdmin
-            open={openForm}
-            close={() => setOpenForm(false)}
-            record={selectedRow}
-          />
-        );
+        return <FormAdmin {...commonProps} />;
       case "clientes":
-        return (
-          <FormCliente
-            open={openForm}
-            close={() => setOpenForm(false)}
-            record={selectedRow}
-          />
-        );
+        return <FormCliente {...commonProps} />;
       case "salas":
-        return (
-          <FormSala
-            open={openForm}
-            close={() => setOpenForm(false)}
-            record={selectedRow}
-          />
-        );
+        return <FormSala {...commonProps} />;
       case "empleados":
-        return (
-          <FormEmpleado
-            open={openForm}
-            close={() => setOpenForm(false)}
-            record={selectedRow}
-          />
-        );
+        return <FormEmpleado {...commonProps} />;
       case "shows":
-        return (
-          <FormShows
-            open={openForm}
-            close={() => setOpenForm(false)}
-            record={selectedRow}
-          />
-        );
+        return <FormShows {...commonProps} />;
       case "jefesalas":
-        return (
-          <FormJefe
-            open={openForm}
-            close={() => setOpenForm(false)}
-            record={selectedRow}
-          />
-        );
-
+        return <FormJefe {...commonProps} />;
       default:
         return <div>No se encontró el formulario correspondiente.</div>;
     }
   };
 
-  // Renderizar la tabla si no hay errores y los datos están cargados
   return (
     <>
       <Box sx={{ display: "flex" }}>
@@ -295,6 +253,7 @@ const VistaTabla = () => {
                   inactivarRegistros={inactivarRegistros}
                   eliminarRegistros={eliminarRegistros}
                   setOpenConfirmDialog={setOpenConfirmDialog}
+                  cambiarRol={cambiarRolRegistros}
                   handleEdit={handleEdit}
                 />
               </Grid>
@@ -303,8 +262,13 @@ const VistaTabla = () => {
           </Container>
         </Box>
       </Box>
+      <Snackbar open={snackbar.open} autoHideDuration={6000} onClose={handleCloseSnackbar}>
+        <MuiAlert onClose={handleCloseSnackbar} severity={snackbar.severity} sx={{ width: '100%' }}>
+          {snackbar.message}
+        </MuiAlert>
+      </Snackbar>
     </>
   );
 };
+
 export default VistaTabla;
- 

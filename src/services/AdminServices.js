@@ -201,4 +201,21 @@ export const getSalasCon = () => {
 );
 }
 
- 
+ /*crud de pedido y shows en el crm admin*/
+ export const eliminarPedido = (id) => {
+  return axios.delete(`${baseUrl}/pedido/${id}`,{
+    headers: {
+      Authorization: localStorage.getItem("token"),
+    }
+  }
+);
+}
+export const cambiarRolUsuario = (id,rol) => {
+  return axios.put(`${baseUrl}/userChangeRol/${id}/${rol}`,{},{
+    headers: {
+      Authorization: localStorage.getItem("token"),
+    }
+  }
+);
+}
+

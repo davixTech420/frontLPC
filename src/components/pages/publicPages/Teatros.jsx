@@ -20,6 +20,7 @@ import {
 import { jwtDecode } from "jwt-decode";
 import CloseIcon from "@mui/icons-material/Close";
 import SendIcon from "@mui/icons-material/Send";
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import { enviarMensaje } from "../../../services/ClienteServices";
 import {
   SrcImagen,
@@ -27,6 +28,7 @@ import {
   getSalas,
   getJefeId,
 } from "../../../services/publicServices";
+import "../../../assets/public.css";
 import Map from "../component/Map";
 
 export default function Teatros() {
@@ -264,10 +266,19 @@ export default function Teatros() {
                   borderBottomRightRadius: 6,
                 }}
                 title={
-                  sala.nombre
-                  
-                  
-                  
+
+                  <>
+                    <Grid sx={{ display: "flex", justifyContent: "space-around" }}>
+                      <Typography>
+                        {sala.nombre}
+                      </Typography>
+                      <Button className="botnWelcome">
+                        <KeyboardArrowDownIcon />
+                      </Button>
+                    </Grid>
+
+                  </>
+
                 }
                 onClick={() => {
                   setSelectTeatro(sala);

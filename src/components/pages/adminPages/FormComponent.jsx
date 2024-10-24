@@ -54,7 +54,7 @@ export const FormComponent = ({ open, onClose, title, children, actions }) => {
   );
 };
 
-export const FormAdmin = ({ open, close, record }) => {
+export const FormAdmin = ({ open, close, record,onSubmitSuccess }) => {
 
   const [formData, setFormData] = useState({
     nombre: record?.nombre || "",
@@ -99,6 +99,7 @@ export const FormAdmin = ({ open, close, record }) => {
     try {
       const regis = await axios.post('http://localhost:3001/api/auth/register', formData);
       console.log(regis.data);
+      onSubmitSuccess();
       close();
     } catch (error) {
       console.log(error);
@@ -146,27 +147,13 @@ export const FormAdmin = ({ open, close, record }) => {
             </Grid>
 
             <Grid item xs={12} sm={6}>
-              <FormControl focused variant="standard" sx={{ minWidth: "100%" }}>
-                <InputLabel id="demo-simple-select-filled-label">
-                  Tipo De Identificacion
-                </InputLabel>
-                <Select
-
-                  value={formData.tipIdentidad}
-                  onChange={(e) =>
-                    setFormData({ ...formData, tipIdentidad: e.target.value })
-                  }
-                  labelId="demo-simple-select-filled-label"
-                  id="demo-simple-select-filled"
-                >
-                  <MenuItem value="">
-                    <em>None</em>
-                  </MenuItem>
-                  <MenuItem value={"C.C"}>Cedula Ciudadania</MenuItem>
-                  <MenuItem value={"T.I"}>Tarjeta De Identidad</MenuItem>
-                  <MenuItem value={"Pasaporte"}>Pasaporte</MenuItem>
-                </Select>
-              </FormControl>
+            <InputValidate nombre="Tpidentificacion"
+                value={formData.tipIdentidad}
+                onChange={(e) =>
+                  setFormData({ ...formData, tipIdentidad: e.target.value })
+                }
+              />
+              
             </Grid>
             <Grid item xs={12} sm={6}>
               <InputValidate nombre="identificacion"
