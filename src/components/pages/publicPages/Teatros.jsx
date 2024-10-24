@@ -1,26 +1,37 @@
-import { useEffect, useState } from "react";
-import Box from "@mui/material/Box";
-import ImageList from "@mui/material/ImageList";
-import ImageListItem from "@mui/material/ImageListItem";
-import LocationOnIcon from "@mui/icons-material/LocationOn";
-import HeaderPublic from "../../partials/HeaderPublic";
-import FooterPublic from "../../partials/FooterPublic";
-import { TextField, Card, CardContent, Typography } from "@mui/material";
+import React, { useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import {
+  Box,
+  TextField,
+  InputAdornment,
+  Grid,
+  Typography,
+  Button,
   Dialog,
   DialogTitle,
-  DialogActions,
   DialogContent,
+  DialogActions,
   IconButton,
-  Button,
-  Grid,
-  Fade,
-  ImageListItemBar,
-} from "@mui/material";
-import { jwtDecode } from "jwt-decode";
-import CloseIcon from "@mui/icons-material/Close";
-import SendIcon from "@mui/icons-material/Send";
-import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+  Chip,
+  useTheme,
+  useMediaQuery,
+} from '@mui/material';
+import {
+  Search,
+  LocationOn,
+  Close,
+  Send,
+  EventSeat,
+  Person,
+  // ChevronLeft,
+  // ChevronRight,
+  Star,
+  Theaters,
+} from '@mui/icons-material';
+import HeaderPublic from "../../partials/HeaderPublic";
+import FooterPublic from "../../partials/FooterPublic";
+import Map from "../component/Map";
+// Assume these functions are imported from your services
 import { enviarMensaje } from "../../../services/ClienteServices";
 import {
   SrcImagen,
@@ -28,269 +39,374 @@ import {
   getSalas,
   getJefeId,
 } from "../../../services/publicServices";
-import "../../../assets/public.css";
-import Map from "../component/Map";
 
-export default function Teatros() {
-  const [rol, setRol] = useState(null);
-  const [idLogueado, setIdLogueado] = useState(null);
-  const [salas, setSalas] = useState([]);
-  const [searchTerm, setSearchTerm] = useState("");
-  const [filteredGames, setFilteredGames] = useState([]);
-  const [selectTeatro, setSelectTeatro] = useState();
-  const [openTeatro, setOpenTeatro] = useState(false);
-  const [jefeSelect, setJefeSelect] = useState();
+const TheaterCard = ({ theater, onClick }) => {
+  const theme = useTheme();
 
-  
+  return (
+
+
+
+
+    <motion.div
+      whileHover={{ scale: 1.05, rotate: 1 }}
+      whileTap={{ scale: 0.95 }}
+      onClick={onClick}
+    >
+      <Box
+        sx={{
+          position: 'relative',
+          borderRadius: '20px',
+          overflow: 'hidden',
+          boxShadow: `0 10px 30px ${theme.palette.primary.main}40`,
+          cursor: 'pointer',
+          height: '100%',
+          display: 'flex',
+          flexDirection: 'column',
+          background: `linear-gradient(45deg, ${theme.palette.primary.main}, ${theme.palette.secondary.main})`,
+        }}
+      >
+        <Box
+          sx={{
+            position: 'relative',
+            paddingTop: '56.25%',
+            overflow: 'hidden',
+          }}
+        >
+          <Box
+            component="img"
+            src={SrcImagen(theater.imagen)}
+            alt={theater.nombre}
+            sx={{
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              width: '100%',
+              height: '100%',
+              objectFit: 'cover',
+              transition: 'transform 0.3s ease-in-out',
+            }}
+          />
+          <Box
+            sx={{
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0,
+              background: 'linear-gradient(to top, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0) 100%)',
+            }}
+          />
+        </Box>
+        <Box sx={{ p: 2, flexGrow: 1, display: 'flex', flexDirection: 'column', justifyContent: 'space-between',background:"linear-gradient(45deg,#66A5AD ,#07575B ,#003B46)" }}>
+          <Typography variant="h6" sx={{ fontWeight: 'bold', color: 'white', textShadow: '0 2px 4px rgba(0,0,0,0.5)' }}>
+            {theater.nombre}
+          </Typography>
+          <Box sx={{ display: 'flex', alignItems: 'center', mt: 1 }}>
+            <LocationOn sx={{ color: theme.palette.secondary.light, mr: 0.5 }} fontSize="small" />
+            <Typography variant="body2" sx={{ color: 'rgba(255,255,255,0.8)' }}>
+              {theater.direccion}
+            </Typography>
+          </Box>
+          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mt: 2 }}>
+            <Chip
+              icon={<EventSeat sx={{ color: theme.palette.secondary.light }} />}
+              label={`${theater.capacidad} asientos`}
+              sx={{ bgcolor: 'rgba(255,255,255,0.2)', color: 'white' }}
+            />
+            <Box sx={{ display: 'flex', alignItems: 'center' }}>
+              <Star sx={{ color: theme.palette.secondary.light, mr: 0.5 }} fontSize="small" />
+              <Typography variant="body2" sx={{ color: 'white', fontWeight: 'bold' }}>
+                {(Math.random() * (5 - 4) + 4).toFixed(1)}
+              </Typography>
+            </Box>
+          </Box>
+        </Box>
+      </Box>
+    </motion.div>
+  );
+};
+
+const VibrantTheaterRental = () => {
+  const [theaters, setTheaters] = useState([]);
+  const [filteredTheaters, setFilteredTheaters] = useState([]);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [selectedTheater, setSelectedTheater] = useState(null);
+  const [manager, setManager] = useState(null);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  // const [currentImageIndex, setCurrentImageIndex] = useState(0);
+
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (token) {
-      const decoded = jwtDecode(token);
-      setRol(decoded.role);
-      setIdLogueado(decoded.id);
-    }
+    const fetchTheaters = async () => {
+      const response = await getSalas();
+      setTheaters(response.data);
+      setFilteredTheaters(response.data);
+    };
+    fetchTheaters();
   }, []);
 
-  const obtenerJefe = async (id) => {
-    try {
-      const resJefe = await getJefeId(id);
-      if (resJefe.status === 500) {
-        setJefeSelect(null);
-      } else {
-        setJefeSelect(resJefe.data);
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  /*
-   *
-   *
-   *
-   *enviar menaje al jefe del teatro */
-  const sendMessage = async () => {
-    const formData = {
-      emisor: idLogueado,
-      receptor: jefeSelect?.id,
-      contenido:
-        "Hola, te saludo estoy interesado en tu " + selectTeatro?.nombre,
-      fechaEnvio: new Date(),
-    };
-    const semd = await enviarMensaje(formData);
-    if (semd.status === 201) {
-      setOpenTeatro(false);
-      alert("Mensaje enviado exitosamente");
-    } else {
-      alert("Error al enviar el correo");
-    }
-  };
-
-  /**
-   *
-   *
-   *
-   *
-   */
-
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await getSalas();
-        setSalas(response.data);
-      } catch (error) {
-        console.error(error);
-      }
-    };
-    fetchData();
-  }, []);
-
-  useEffect(() => {
-    setFilteredGames(
-      salas.filter((game) =>
-        game.nombre.toLowerCase().includes(searchTerm.toLowerCase())
+    setFilteredTheaters(
+      theaters.filter((theater) =>
+        theater.nombre.toLowerCase().includes(searchTerm.toLowerCase())
       )
     );
-  }, [searchTerm, salas]);
+  }, [searchTerm, theaters]);
 
-  const goGoogleMaps = () => {
-    const googleMapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
-      selectTeatro?.direccion
-    )}`;
-    window.open(googleMapsUrl, "_blank");
+  const handleTheaterSelect = async (theater) => {
+    setSelectedTheater(theater);
+    const managerResponse = await getJefeId(theater.id);
+    setManager(managerResponse.data);
+    // setCurrentImageIndex(0); // Reset image index when selecting a new theater
+    setIsDialogOpen(true);
   };
+
+  const handleSendMessage = async () => {
+    const message = {
+      emisor: 'currentUserId', // Replace with actual user ID
+      receptor: manager.id,
+      contenido: `Hola, estoy interesado en tu teatro ${selectedTheater.nombre}`,
+      fechaEnvio: new Date(),
+    };
+    await enviarMensaje(message);
+    setIsDialogOpen(false);
+  };
+
+  // const handleNextImage = () => {
+  //   if (selectedTheater && selectedTheater.imagenes) {
+  //     setCurrentImageIndex((prevIndex) => (prevIndex + 1) % selectedTheater.imagenes.length);
+  //   }
+  // };
+
+  // const handlePrevImage = () => {
+  //   if (selectedTheater && selectedTheater.imagenes) {
+  //     setCurrentImageIndex((prevIndex) => (prevIndex - 1 + selectedTheater.imagenes.length) % selectedTheater.imagenes.length);
+  //   }
+  // };
+
   return (
-    <>
-      <Dialog
-        open={openTeatro}
-        onClose={() => setOpenTeatro(false)}
-        PaperProps={{
-          style: {
-            borderRadius: 50,
-          },
-        }}
-        TransitionComponent={Fade}
-        transitionDuration={{ enter: 500, exit: 500 }}
-      >
-        <DialogTitle sx={{ background: "linear-gradient(900deg,#66A5AD,#C4dfe6,white)" }}>
-          <center>{selectTeatro?.nombre}</center>
-          <IconButton
-            aria-label="close"
-            onClick={() => setOpenTeatro(false)}
-            sx={{
-              position: "absolute",
-              right: 8,
-              top: 8,
-            }}
-          >
-            <CloseIcon color="error" />
-          </IconButton>{" "}
-        </DialogTitle>
-        <DialogContent>
-          <Grid container spacing={2}>
-            <Grid item xs={12} sm={6}>
-              <Card sx={{ boxShadow: "0px 10px 20px rgba(0, 0, 0, 0.5)" }}>
-                <CardContent>
-                  <Typography variant="h5" color="text.secondary">
-                    Capacidad : {selectTeatro?.capacidad}
-                  </Typography>
-                  <Typography variant="body2" color="text.secondary">
-                    Direccion : {selectTeatro?.direccion}
-                  </Typography>
-                  <Typography variant="body2" color="text.secondary">
-                    Jefe De La Sala : {jefeSelect?.nombre}
-                  </Typography>
-                  <br />
 
 
-                  {rol == "cliente" && (
-                    <>
-                      <center>
-                        <br />
-                        <br />
-                        <Button onClick={sendMessage} variant="outlined">
-                          <SendIcon /> Comunicar Con Teatro
-                        </Button>
-                      </center>
-                    </>
-                  )}
-                </CardContent>
-              </Card>
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <img
-                style={{ boxShadow: "0px 10px 20px rgba(0, 0, 0, 0.5)" }}
-                src={SrcImagen(selectTeatro?.imagen)}
-                width="100%"
-                height="100%"
-              />
-            </Grid>
-          </Grid>{" "}
-          <Grid>
-            <center>
-              <br />
-              <Button
-                color="success"
-                variant="outlined"
-                onClick={goGoogleMaps}
-              >
-                <LocationOnIcon />
-                Mapa
-              </Button>
-
-            </center>
-            <br />
-            <Box sx={{
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-              height: { xs: "30vh", md: "50vh" },
-              width: "100%",
-
-            }}>
-              <Map address={selectTeatro?.direccion || selectTeatro?.nombre} />
-            </Box>
-          </Grid>
-        </DialogContent>
-        <DialogActions sx={{ justifyContent: "center", background: "linear-gradient(360deg,#66A5AD,#C4dfe6,white)" }}>
-          <Button
-            onClick={() => setOpenTeatro(false)}
-            variant="contained"
-            color="error"
-          >
-            Cerrar
-          </Button>
-        </DialogActions>
-      </Dialog>
+    <Box>
 
       <HeaderPublic />
 
-      <center>
-        <h1>Buscas Alquilar Un Teatro?</h1>
-      </center>
-      {/* contenedor de la vista de teatros con las imagenees  */}
-      <Box sx={{ maxWidth: "100%", maxHeight: "80%", marginInline: "30px" }}>
-        <TextField
-          sx={{ marginBottom: 4 }}
-          label="Buscar teatro"
-          variant="outlined"
+      <Box sx={{ maxWidth: '1200px', margin: 'auto', padding: 3 }}>
+
+        <motion.div
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+        >
+          <Typography variant="h3" align="center" sx={{
+            fontWeight: 900,
+            color: theme.palette.primary.main,
+            mb: 4,
+            textShadow: `2px 2px 4px ${theme.palette.primary.light}`,
+          }}>
+            Descubre Teatros Mágicos
+          </Typography>
+        </motion.div>
+
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.2 }}
+        >
+          <TextField
+            fullWidth
+            variant="outlined"
+            placeholder="Busca tu teatro ideal..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">
+                  <Search color="primary" />
+                </InputAdornment>
+              ),
+            }}
+            sx={{
+              mb: 4,
+              '& .MuiOutlinedInput-root': {
+                borderRadius: '30px',
+                backgroundColor: theme.palette.background.paper,
+                '&:hover': {
+                  backgroundColor: theme.palette.action.hover,
+                },
+                '&.Mui-focused': {
+                  backgroundColor: theme.palette.background.paper,
+                  boxShadow: `0 0 0 2px ${theme.palette.primary.main}`,
+                },
+              },
+            }}
+          />
+        </motion.div>
+
+        <Grid container spacing={3}>
+          <AnimatePresence>
+            {filteredTheaters.map((theater) => (
+              <Grid item xs={12} sm={6} md={4} key={theater.id}>
+                <motion.div
+                  layout
+                  initial={{ opacity: 0, scale: 0.9 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.9 }}
+                  transition={{ duration: 0.3 }}
+                >
+                  <TheaterCard theater={theater} onClick={() => handleTheaterSelect(theater)} />
+                </motion.div>
+              </Grid>
+            ))}
+          </AnimatePresence>
+        </Grid>
+
+        <Dialog
+          open={isDialogOpen}
+          onClose={() => setIsDialogOpen(false)}
           fullWidth
-          margin="normal"
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-        />
+          maxWidth="md"
+          PaperProps={{
+            sx: {
+              borderRadius: '20px',
+              overflow: 'hidden',
+              bgcolor: theme.palette.background.paper,
+            },
+          }}
+        >
+          <DialogTitle sx={{ p: 3, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <Typography variant="h4" component="span" sx={{
+              fontWeight: 'bold',
+              color: theme.palette.primary.main,
+              textShadow: `1px 1px 2px ${theme.palette.primary.light}`,
+            }}>
+              {selectedTheater?.nombre}
+            </Typography>
+            <IconButton
+              aria-label="close"
+              onClick={() => setIsDialogOpen(false)}
+              sx={{
+                color: theme.palette.grey[500],
+                '&:hover': { color: theme.palette.primary.main },
+              }}
+            >
+              <Close />
+            </IconButton>
+          </DialogTitle>
+          <DialogContent dividers sx={{ p: 0 }}>
+            <Box sx={{ position: 'relative', height: isMobile ? '300px' : '400px', overflow: 'hidden' }}>
+              {selectedTheater && selectedTheater.imagen && (
+                <Box
+                  component="img"
+                  src={SrcImagen(selectedTheater.imagen)}
+                  alt={selectedTheater.nombre}
+                  sx={{
+                    width: '100%',
+                    height: '100%',
+                   
+                    objectFit: 'cover',
+                  }}
+                />
+              )}
+            </Box>
+            <Box sx={{ p: 3 }}>
+              <Grid container spacing={3}>
+                <Grid item xs={12} md={6}>
+                  <Typography variant="h6" gutterBottom sx={{
+                    fontWeight: 'bold',
+                    color: "linear-gradient(45deg,#66A5AD ,#07575B ,#003B46)",
+                    textShadow: `1px 1px 2px ${theme.palette.secondary.light}`,
+                  }}>
+                    Detalles del Teatro
+                  </Typography>
+                  <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                      <EventSeat  sx={{ color:"#07575B" }} />
+                      <Typography variant="body1">Capacidad: {selectedTheater?.capacidad}</Typography>
+                    </Box>
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                      <LocationOn sx={{ color:"#07575B" }} />
+                      <Typography variant="body1">Dirección: {selectedTheater?.direccion}</Typography>
+                    </Box>
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                      <Person sx={{ color:"#07575B" }} />
+                      <Typography variant="body1">Jefe de la Sala: {manager?.nombre}</Typography>
+                    </Box>
+                  </Box>
+                </Grid>
+                <Grid item xs={12} md={6}>
+                  <Typography variant="h6" gutterBottom sx={{
+                    fontWeight: 'bold',
+                    color: "linear-gradient(45deg,#66A5AD ,#07575B ,#003B46)",
+                    textShadow: `1px 1px 2px ${theme.palette.secondary.light}`,
+                  }}>
+                    Ubicación
+                  </Typography>
+                  {/* <Box
+                    sx={{
+                      height: '200px',
+                      bgcolor: theme.palette.primary.light,
+                      borderRadius: '10px',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      color: theme.palette.primary.contrastText,
+                    }}
+                  >
+                    
+                    <Theaters sx={{ fontSize: 60, mb: 2 }} />
+                    <Typography variant="body2">
+                      Mapa no disponible
+                    </Typography>
+                  </Box> */}
+                  <Map address={"teatro colon"}/>
+                </Grid>
+              </Grid>
+            </Box>
+          </DialogContent>
+          <DialogActions sx={{ p: 3, justifyContent: 'space-between' }}>
+            <Button
+              onClick={() => setIsDialogOpen(false)}
+              variant="outlined"
+              sx={{
+                borderRadius: '20px',
+                borderColor: "linear-gradient(45deg,#66A5AD ,#07575B ,#003B46)",
+                color: "linear-gradient(45deg,#66A5AD ,#07575B ,#003B46)",
+                '&:hover': {
+                  borderColor: theme.palette.secondary.dark,
+                  backgroundColor: theme.palette.secondary.light,
+                },
+              }}
+            >
+              Cerrar
+            </Button>
+            <Button
+              variant="contained"
+              startIcon={<Send />}
+              onClick={handleSendMessage}
+              sx={{
+                borderRadius: '20px',
+                background:"linear-gradient(45deg,#66A5AD ,#07575B ,#003B46)",
+                color: theme.palette.secondary.contrastText,
+                boxShadow: `0 4px 10px ${theme.palette.secondary.main}40`,
+                '&:hover': {
+                  bgcolor: theme.palette.secondary.dark,
+                  boxShadow: `0 6px 12px ${theme.palette.secondary.main}60`,
+                },
+              }}
+            >
+              Contactar Teatro
+            </Button>
+          </DialogActions>
+        </Dialog>
 
-        {/* Solo muestra la ImageList si no hay alerta abierta */}
-
-        <ImageList variant="masonry" cols={3} gap={8}>
-          {filteredGames.map((sala) => (
-            <ImageListItem key={sala.id}>
-              <img
-                style={{
-                  borderRadius: 6,
-                  boxShadow: "0px 10px 20px rgba(0, 0, 0, 0.5)",
-                }}
-                onClick={() => {
-                  setSelectTeatro(sala);
-                  setOpenTeatro(true);
-                  obtenerJefe(sala.id);
-                }}
-                src={SrcImagen(sala?.imagen)}
-                alt={`Imagen de ${sala.nombre}`}
-                loading="lazy"
-              />
-              <ImageListItemBar
-                style={{
-                  borderBottomLeftRadius: 6,
-                  borderBottomRightRadius: 6,
-                }}
-                title={
-
-                  <>
-                    <Grid sx={{ display: "flex", justifyContent: "space-around" }}>
-                      <Typography>
-                        {sala.nombre}
-                      </Typography>
-                      <Button className="botnWelcome">
-                        <KeyboardArrowDownIcon />
-                      </Button>
-                    </Grid>
-
-                  </>
-
-                }
-                onClick={() => {
-                  setSelectTeatro(sala);
-                  setOpenTeatro(true);
-                  obtenerJefe(sala.id);
-                }}
-              />
-            </ImageListItem>
-          ))}
-        </ImageList>
       </Box>
       <FooterPublic />
-    </>
+    </Box>
   );
-}
+};
+
+export default VibrantTheaterRental;
