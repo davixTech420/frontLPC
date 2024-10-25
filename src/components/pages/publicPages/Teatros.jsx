@@ -15,6 +15,8 @@ import {
   Chip,
   useTheme,
   useMediaQuery,
+  Snackbar,
+  Alert
 } from '@mui/material';
 import {
   Search,
@@ -39,6 +41,7 @@ import {
   getSalas,
   getJefeId,
 } from "../../../services/publicServices";
+import { jwtDecode } from "jwt-decode";
 
 const TheaterCard = ({ theater, onClick }) => {
   const theme = useTheme();
@@ -133,17 +136,27 @@ const VibrantTheaterRental = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedTheater, setSelectedTheater] = useState(null);
   const [manager, setManager] = useState(null);
+  const [logueado,setLogueado] = useState(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  // const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  
+  const [openSnackMessage,setOpenSnackMessage] = useState(false);
+  const [snackMessage,setSnackMessage] = useState("");
 
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
   useEffect(() => {
+
     const fetchTheaters = async () => {
       const response = await getSalas();
       setTheaters(response.data);
       setFilteredTheaters(response.data);
+      const token = localStorage.getItem('token');
+      if (!token){
+        return;
+      }
+const decoded = jwtDecode(token);
+setLogueado(decoded);
     };
     fetchTheaters();
   }, []);
@@ -158,6 +171,14 @@ const VibrantTheaterRental = () => {
 
   const handleTheaterSelect = async (theater) => {
     setSelectedTheater(theater);
+    try{
+      const managerResponse = await getJefeId(theater.id);
+      setManager(managerResponse.data);
+      // setCurrentImageIndex(0); // Reset image index when selecting a new theater
+      setIsDialogOpen(true);      
+    }catch(error){
+console.log(error);
+    }
     const managerResponse = await getJefeId(theater.id);
     setManager(managerResponse.data);
     // setCurrentImageIndex(0); // Reset image index when selecting a new theater
@@ -165,14 +186,26 @@ const VibrantTheaterRental = () => {
   };
 
   const handleSendMessage = async () => {
+    try {
+      
+    if (!logueado || logueado.role !== "cliente") {
+      setOpenSnackMessage(true);
+      setSnackMessage("Debes iniciar sesion como cliente para enviar un mensaje");
+      return;
+    }
     const message = {
-      emisor: 'currentUserId', // Replace with actual user ID
+      emisor: logueado.id, // Replace with actual user ID
       receptor: manager.id,
       contenido: `Hola, estoy interesado en tu teatro ${selectedTheater.nombre}`,
       fechaEnvio: new Date(),
     };
     await enviarMensaje(message);
     setIsDialogOpen(false);
+    } catch (error) {
+      console.log(error);
+    }
+    
+    
   };
 
   // const handleNextImage = () => {
@@ -362,7 +395,7 @@ const VibrantTheaterRental = () => {
                       Mapa no disponible
                     </Typography>
                   </Box> */}
-                  <Map address={"teatro colon"}/>
+                  <Map address={selectedTheater?.direccion || selectedTheater?.nombre}/>
                 </Grid>
               </Grid>
             </Box>
@@ -404,6 +437,21 @@ const VibrantTheaterRental = () => {
         </Dialog>
 
       </Box>
+
+
+      <Snackbar open={openSnackMessage} autoHideDuration={6000} onClose={()=> setOpenSnackMessage(false)}>
+  <Alert
+    onClose={()=> setOpenSnackMessage(false)}
+    severity="error"
+    variant="filled"
+    sx={{ width: '100%' }}
+  >
+    {snackMessage}
+  </Alert>
+</Snackbar>
+
+
+
       <FooterPublic />
     </Box>
   );

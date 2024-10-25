@@ -227,7 +227,9 @@ export default function MinimalistEventShowcase() {
                       sx={{
                         width: '100%',
                         height: '100%',
-                        objectFit: 'cover',
+                        objectFit: 'contain',
+                        objectPosition: 'center',
+    
                       }}
                     />
                   </motion.div>
@@ -455,7 +457,7 @@ export default function MinimalistEventShowcase() {
                       }}
                     >
                       <Box sx={{ width: "100%", height: "100%", obejectFit: "cover" }}>
-                        <Map address={"Teatro Colon"} />
+                        <Map address={nextShow?.sala.data.direccion || nextShow?.sala.data.nombre} />
                       </Box>
                     </Box>
                   </Box>

@@ -12,6 +12,16 @@ const InputValidate = (props) => {
 
   const validateInput = (value) => {
     switch (props.nombre) {
+      case "empleado":
+        setError(value.length == 0  ? "Debes Poner UN NUmero Si No Necesitas empleados 0" : "");
+        break;
+      case "salas":
+        setError(value.length == 0  ? "Debes Escoger Una Sala" : "");
+        break;
+      case "horaFin":
+      case "horaInicio":
+        setError(value.length == 0  ? "Debes Poner Una Hora" : "");
+        break;
       case "telefono":
         setError(value.length !== 10 ? "El teléfono debe tener 10 dígitos" : "");
         break;
@@ -31,6 +41,12 @@ const InputValidate = (props) => {
       case "pass":
         setError(value.length < 8 ? "La contraseña debe tener al menos 8 caracteres" : "");
         break;
+        case "cupos":
+          setError(value.length < 0 ? "Debes Ingesar Un Cupo" : "");
+          break;
+          case "fechaPresentar":
+          setError(value.length < 0 ? "Debes Oprimir La casilla" : "");
+          break;
       default:
         setError("");
     }
@@ -38,9 +54,13 @@ const InputValidate = (props) => {
 
   const commonProps = {
     value: props.value,
+    onClick: props.onClick,
     onChange: (e) => {
       props.onChange(e);
       validateInput(e.target.value);
+    },
+    InputProps:{
+      readOnly:props.readOnly,
     },
     required: true,
     fullWidth: true,
@@ -51,6 +71,97 @@ const InputValidate = (props) => {
   };
 
   switch (props.nombre) {
+    case "salas":
+      return (
+        <FormControl {...commonProps} fullWidth>
+                      <InputLabel id="sala-label">Sala</InputLabel>
+                      <Select
+                        labelId="sala-label"
+                        id="salaId"
+                        {...commonProps}
+                        label="Sala"
+                      >
+                        <MenuItem value="">
+                          <em>Ninguna</em>
+                        </MenuItem>
+                        {props.salasCon.map((sala) => (
+                          <MenuItem key={sala.id} value={sala.id}>{sala.nombre}</MenuItem>
+                        ))}
+                      </Select>
+                    </FormControl>
+      );
+    
+      case "empleado":
+        return (
+          <TextField
+          {...commonProps}
+          onKeyPress={(e) => {
+            if (!/[0-9]/.test(e.key)) {
+              e.preventDefault();
+            }
+          }}
+          inputProps={{
+            maxLength: 2,
+          }}
+          id="empleados"
+          label="empleados"
+          name="empleados"
+          autoComplete="tel"
+        />
+        );
+    case "horaInicio":
+      return (
+        <TextField
+          {...commonProps}
+          type="time"
+          id="horaInicio"
+          label="horaInicio"
+          name="horaInicio"
+          InputLabelProps={{
+            shrink: true,
+          }}
+        />
+      );
+      case "horaFin":
+      return (
+        <TextField
+          {...commonProps}
+          type="time"
+          id="horaFin"
+          label="horaFin"
+          name="horaFin"
+          InputLabelProps={{
+            shrink: true,
+          }}
+        />
+      );
+    case "fechaPresentar":
+      return (
+        <TextField
+          {...commonProps}
+          type="date"
+          id="fechaPresentar"
+          label="fechaPresentar"
+          name="fechaPresentar"
+        />
+      );
+    case "cupos":
+      return (
+        <TextField
+          {...commonProps}
+          onKeyPress={(e) => {
+            if (!/[0-9]/.test(e.key)) {
+              e.preventDefault();
+            }
+          }}
+          inputProps={{
+            maxLength: 4,
+          }}
+          id="cuposDisponibles"
+          label="cuposDisponibles"
+          name="cuposDisponibles"
+        />
+      );
     case "telefono":
       return (
         <TextField

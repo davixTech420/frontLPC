@@ -5,7 +5,9 @@ import axios from "axios";
 //local
 const baseUrl = "http://localhost:3001/api/admin";
 
+//operaciones para el usuario CRUD
 
+//actualizar usuario
 export const updateUser = (id, formData) => {
   return axios.put(`${baseUrl}/user/${id}`, formData,
     {
@@ -15,6 +17,26 @@ export const updateUser = (id, formData) => {
     }
   );
 }
+//inactivar usuario
+export const inactivarUser = (id) => {
+  return axios.put(`${baseUrl}/userInact/${id}`,{},
+  {
+    headers: {
+      Authorization: localStorage.getItem("token"),
+    }
+  }
+);
+ }
+ //activar usuario
+ export const activarUser = (id) => {
+  return axios.put(`${baseUrl}/userAct/${id}`,{},
+  {
+    headers: {
+      Authorization: localStorage.getItem("token"),
+    }
+  }
+);
+ }
 
 
 
@@ -167,7 +189,15 @@ export const getSalasCon = () => {
 
 
 
-
+ export const actualizarClienteAdmin = (id, formData) => {
+  return axios.put(`${baseUrl}/clientes/${id}`, formData,
+    {
+      headers: {
+        Authorization: localStorage.getItem("token"),
+      }
+    }
+  );
+}
 
 
  export const getCliente = () => {

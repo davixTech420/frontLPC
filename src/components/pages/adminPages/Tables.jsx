@@ -29,6 +29,8 @@ import {
   eliminarPedido,
   eliminarJefe,
   activarShow,
+  activarUser,
+  inactivarUser,
   inactivarShow,
   cambiarRolUsuario,
 } from "../../../services/AdminServices";
@@ -129,6 +131,18 @@ const VistaTabla = () => {
     try {
       let resDel;
       switch (tablaId) {
+        case "admins":
+          resDel = await activarUser(id);
+          break;
+          case "clientes":
+          resDel = await activarUser(id);
+          break;
+          case "empleados":
+          resDel = await activarUser(id);
+          break;
+          case "jefesalas":
+          resDel = await activarUser(id);
+          break;
         case "shows":
           resDel = await activarShow(id);
           break;
@@ -147,6 +161,18 @@ const VistaTabla = () => {
     try {
       let resDel;
       switch (tablaId) {
+        case "admins":
+          resDel = await inactivarUser(id);
+          break;
+          case "clientes":
+          resDel = await inactivarUser(id);
+          break;
+          case "empleados":
+          resDel = await inactivarUser(id);
+          break;
+          case "jefesalas":
+          resDel = await inactivarUser(id);
+          break;
         case "shows":
           resDel = await inactivarShow(id);
           break;

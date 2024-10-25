@@ -22,7 +22,7 @@ import {
   Avatar,
   Typography,
 } from "@mui/material";
-import { crearSala, crearShow, updateSala, updateUser, getSalasSin, getSalasCon } from "../../../services/AdminServices";
+import { crearSala, crearShow, updateSala, updateUser, getSalasSin, getSalasCon, actualizarClienteAdmin } from "../../../services/AdminServices";
 import "../../../assets/admin.css";
 export const FormComponent = ({ open, onClose, title, children, actions }) => {
   return (
@@ -54,7 +54,7 @@ export const FormComponent = ({ open, onClose, title, children, actions }) => {
   );
 };
 
-export const FormAdmin = ({ open, close, record,onSubmitSuccess }) => {
+export const FormAdmin = ({ open, close, record, onSubmitSuccess }) => {
 
   const [formData, setFormData] = useState({
     nombre: record?.nombre || "",
@@ -76,7 +76,6 @@ export const FormAdmin = ({ open, close, record,onSubmitSuccess }) => {
         identificacion: record.identificacion,
         telefono: record.telefono,
         email: record.email,
-        password: record.password,
         estado: record.estado
       });
     } else {
@@ -110,6 +109,7 @@ export const FormAdmin = ({ open, close, record,onSubmitSuccess }) => {
     try {
       const regis = updateUser(record.id, formData);
       console.log(regis.data);
+      onSubmitSuccess();
       close();
     } catch (error) {
       console.log(error);
@@ -136,24 +136,29 @@ export const FormAdmin = ({ open, close, record,onSubmitSuccess }) => {
               <InputValidate nombre="nombre"
                 value={formData.nombre}
                 onChange={(e) =>
-                  setFormData({ ...formData, nombre: e.target.value })} />
+                  setFormData({ ...formData, nombre: e.target.value })}
+                readOnly={record ? true : false}
+              />
 
             </Grid>
             <Grid item xs={12} sm={6}>
               <InputValidate nombre="apellido"
                 value={formData.apellido}
                 onChange={(e) =>
-                  setFormData({ ...formData, apellido: e.target.value })} />
+                  setFormData({ ...formData, apellido: e.target.value })}
+                readOnly={record ? true : false}
+              />
             </Grid>
 
             <Grid item xs={12} sm={6}>
-            <InputValidate nombre="Tpidentificacion"
+              <InputValidate nombre="Tpidentificacion"
                 value={formData.tipIdentidad}
                 onChange={(e) =>
-                  setFormData({ ...formData, tipIdentidad: e.target.value })
+                  record ? null : setFormData({ ...formData, tipIdentidad: e.target.value })
                 }
+                readOnly={record ? true : false}
               />
-              
+
             </Grid>
             <Grid item xs={12} sm={6}>
               <InputValidate nombre="identificacion"
@@ -161,6 +166,8 @@ export const FormAdmin = ({ open, close, record,onSubmitSuccess }) => {
                 onChange={(e) =>
                   setFormData({ ...formData, identificacion: e.target.value })
                 }
+                readOnly={record ? true : false}
+
               />
             </Grid>
 
@@ -182,15 +189,19 @@ export const FormAdmin = ({ open, close, record,onSubmitSuccess }) => {
               />
 
             </Grid>
-            <Grid item xs={12}>
-              <InputValidate nombre="pass"
-                value={formData.password}
-                onChange={(e) =>
-                  setFormData({ ...formData, password: e.target.value })
-                }
-              />
+            {record ? null : (
+              <>
+                <Grid item xs={12}>
+                  <InputValidate nombre="pass"
+                    value={formData.password}
+                    onChange={(e) =>
+                      setFormData({ ...formData, password: e.target.value })
+                    }
+                  />
 
-            </Grid>
+                </Grid></>
+            )}
+
           </Grid>
         </Box>
       }
@@ -230,20 +241,49 @@ export const FormAdmin = ({ open, close, record,onSubmitSuccess }) => {
 
 
 
-export const FormCliente = ({ open, close }) => {
+export const FormCliente = ({ open, close, record, onSubmitSuccess }) => {
   const [formData, setFormData] = useState({
-    nombre: "",
-    apellido: "",
-    tipIdentidad: "",
-    identificacion: "",
-    telefono: "",
-    nacionCliente: "",
-    direccion: "",
-    email: "",
-    password: "",
+    nombre: record?.nombre || "",
+    apellido: record?.apellido || "",
+    tipIdentidad: record?.tipIdentidad || "",
+    identificacion: record?.identificacion || "",
+    telefono: record?.telefono || "",
+    email: record?.email || "",
+    nacionCliente: record?.nacionCliente || "",
+    direccion: record?.direccion || "",
+    password: record?.password || "",
     estado: true,
     role: "cliente",
   });
+  useEffect(() => {
+    if (record) {
+      setFormData({
+        nombre: record.nombre,
+        apellido: record.apellido,
+        tipIdentidad: record.tipIdentidad,
+        identificacion: record.identificacion,
+        telefono: record.telefono,
+        email: record.email,
+        nacionCliente: record.nacionCliente,
+        direccion: record.direccion,
+        estado: record.estado
+      })
+    } else {
+      setFormData({
+        nombre: "",
+        apellido: "",
+        tipIdentidad: "",
+        identificacion: "",
+        telefono: "",
+        email: "",
+        nacionCliente: "",
+        direccion: "",
+        password: "",
+        estado: true,
+        role: "cliente",
+      })
+    }
+  }, [record, open]);
 
 
   const hanSubmit = async (e) => {
@@ -251,87 +291,72 @@ export const FormCliente = ({ open, close }) => {
     try {
       const regis = await axios.post('http://localhost:3001/api/auth/register', formData);
       console.log(regis.data);
+      onSubmitSuccess();
       close();
     } catch (error) {
       console.log(error);
     }
   };
 
+  const hanUpdate = async (e) => {
+
+    try {
+      const regis = await actualizarClienteAdmin(record.id, formData);
+      console.log(regis.data);
+      onSubmitSuccess();
+      close();
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+
+  const handleSubmit = (e) => {
+    if (record) {
+      hanUpdate(formData);
+    } else {
+      hanSubmit(formData);
+    }
+
+  }
   return (
     <FormComponent
       open={open}
       onClose={close}
-      title={"Crear Cliente"}
+      title={record ? "Actualizar Cliente" : "Crear Cliente"}
       children={
         <Box sx={{ mt: 3, p: 3 }} component="form" onSubmit={hanSubmit} noValidate>
           <Grid container spacing={2}>
             <Grid item xs={12} sm={6}>
-              <TextField
-                autoComplete="given-name"
-                name="nombre"
-                value={formData.nombre}
+              <InputValidate nombre="nombre" value={formData.nombre}
                 onChange={(e) =>
                   setFormData({ ...formData, nombre: e.target.value })
-                }
-                required
-                fullWidth
-                id="nombre"
-                label="Nombre"
-                autoFocus
-                variant="filled"
-              />
+                } />
+
             </Grid>
             <Grid item xs={12} sm={6}>
-              <TextField
-                required
-                fullWidth
-                value={formData.apellido}
+              <InputValidate nombre="apellido" value={formData.apellido}
                 onChange={(e) =>
                   setFormData({ ...formData, apellido: e.target.value })
-                }
-                id="apellido"
-                label="Apellido"
-                name="apellido"
-                autoComplete="family-name"
-                variant="filled"
-              />
+                } />
+
             </Grid>
 
             <Grid item xs={12} sm={6}>
-              <FormControl variant="filled" sx={{ minWidth: "100%" }}>
-                <InputLabel id="demo-simple-select-filled-label">
-                  Tipo De Identificacion
-                </InputLabel>
-                <Select
-                  value={formData.tipIdentidad}
-                  onChange={(e) =>
-                    setFormData({ ...formData, tipIdentidad: e.target.value })
-                  }
-                  labelId="demo-simple-select-filled-label"
-                  id="demo-simple-select-filled"
-                >
-                  <MenuItem value="">
-                    <em>None</em>
-                  </MenuItem>
-                  <MenuItem value={"C.C"}>Cedula Ciudadania</MenuItem>
-                  <MenuItem value={"T.I"}>Tarjeta De Identidad</MenuItem>
-                  <MenuItem value={"Pasaporte"}>Pasaporte</MenuItem>
-                </Select>
-              </FormControl>
+              <InputValidate nombre="Tpidentificacion" value={formData.tipIdentidad}
+                onChange={(e) =>
+                  setFormData({ ...formData, tipIdentidad: e.target.value })
+                }
+                readOnly={record ? true : false}
+              />
+
             </Grid>
             <Grid item xs={12} sm={6}>
-              <TextField
-                required
-                fullWidth
-                value={formData.identificacion}
+              <InputValidate nombre="identificacion" value={formData.identificacion}
                 onChange={(e) =>
                   setFormData({ ...formData, identificacion: e.target.value })
                 }
-                id="identificacion"
-                label="Identificacion"
-                name="identificacion"
-                autoComplete="family-name"
-                variant="filled"
+                readOnly={record ? true : false}
               />
             </Grid>
             <Grid item xs={12}>
@@ -361,62 +386,39 @@ export const FormCliente = ({ open, close }) => {
                 variant="filled"
                 label="Nacionalidad"
                 name="Nacionalidad"
-
               />
             </Grid>
             <Grid item xs={12}>
-              <TextField
-                required
-                fullWidth
-                value={formData.email}
+              <InputValidate nombre="email" value={formData.email}
                 onChange={(e) =>
                   setFormData({ ...formData, email: e.target.value })
                 }
-                id="email"
-                variant="filled"
-                label="Email"
-                name="email"
-                autoComplete="email"
               />
             </Grid>
             <Grid item xs={12}>
-              <TextField
-                required
-                fullWidth
-                value={formData.telefono}
+              <InputValidate nombre="telefono" value={formData.telefono}
                 onChange={(e) =>
                   setFormData({ ...formData, telefono: e.target.value })
                 }
-                id="telefono"
-                variant="filled"
-                label="Telefono"
-                name="telefono"
-                autoComplete="family-name"
               />
             </Grid>
-            <Grid item xs={12}>
-              <TextField
-                required
-                fullWidth
-                value={formData.password}
-                onChange={(e) =>
-                  setFormData({ ...formData, password: e.target.value })
-                }
-                name="password"
-                label="Contraseña"
-                type="password"
-                id="password"
-                autoComplete="new-password"
-                variant="filled"
-              />
-            </Grid>
+            {record ? null : (
+              <Grid item xs={12}>
+                <InputValidate nombre="pass" value={formData.password}
+                  onChange={(e) =>
+                    setFormData({ ...formData, password: e.target.value })
+                  }
+
+                />
+              </Grid>
+            )}
           </Grid>
         </Box>
       }
       actions={
         <>
-          <Button variant="contained" onClick={hanSubmit}>
-            Crear
+          <Button variant="contained" onClick={handleSubmit}>
+            {record ? "Actualizar" : "Crear"}
           </Button>
         </>
       }

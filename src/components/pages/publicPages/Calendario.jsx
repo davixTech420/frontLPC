@@ -46,6 +46,7 @@ import {
   useTheme,
   useMediaQuery,
 } from "@mui/material";
+import InputValidate from "../component/ValidateInput";
 import { jwtDecode } from "jwt-decode";
 
 const localizer = momentLocalizer(moment);
@@ -181,7 +182,7 @@ function Calendario() {
   };
 
   const handleSubmit = async (e) => {
-    
+
     try {
       const errorForm = validarFormulario(formData, "pedidos");
       if (errorForm) {
@@ -319,8 +320,8 @@ function Calendario() {
           },
         }}
       >
-        <DialogTitle sx={{ 
-          background: `linear-gradient(45deg, ${theme.palette.primary.main}, ${theme.palette.secondary.main})`,
+        <DialogTitle sx={{
+          background: "linear-gradient(45deg,#66A5AD ,#07575B ,#003B46)",
           color: 'white',
           display: 'flex',
           justifyContent: 'space-between',
@@ -385,6 +386,7 @@ function Calendario() {
             onClick={() => setOpenShow(false)}
             variant="contained"
             color="primary"
+            className="botnWelcome"
             sx={{ borderRadius: 20 }}
           >
             Cerrar
@@ -444,7 +446,7 @@ function Calendario() {
                           sx={{
                             mb: 2,
                             borderRadius: 20,
-                          
+
                           }}
                         >
                           Seleccionar Imagen
@@ -469,50 +471,19 @@ function Calendario() {
                     </Box>
                   </Grid>
                   <Grid item xs={12}>
-                    <TextField
-                      required
-                      fullWidth
-                      value={formData.nombre}
-                      onChange={(e) => setFormData({ ...formData, nombre: e.target.value })}
-                      inputProps={{
-                        maxLength: 15,
-                      }}
-                      onKeyDown={(e) => {
-                        if (!/^[a-zA-ZáéíóúÁÉÍÓÚñÑ ]+$/.test(e.key)) {
-                          e.preventDefault();
-                        }
-                      }}
-                      id="nombre"
-                      label="Nombre"
-                      name="nombre"
-                      variant="outlined"
-                    />
+                    <InputValidate nombre="nombre" value={formData.nombre}
+                      onChange={(e) => setFormData({ ...formData, nombre: e.target.value })} />
                   </Grid>
                   <Grid item xs={12}>
-                    <TextField
-                      required
-                      fullWidth
-                      value={formData.cuposDisponibles}
-                      onChange={(e) => {
-                        const value = e.target.value;
-                        if (value.length < 5 && parseInt(value) >= 0) {
-                          setFormData({ ...formData, cuposDisponibles: value });
-                        }
-                      }}
-                      inputProps={{
-                        maxLength: 4,
-                      }}
-                      type="number"
-                      id="cuposDisponibles"
-                      label="Cupos Disponibles"
-                      name="cuposDisponibles"
-                      variant="outlined"
+                    <InputValidate nombre="cupos" value={formData.cuposDisponibles}
+                      onChange={(e) => setFormData({ ...formData, cuposDisponibles: e.target.value })}
+
                     />
+
                   </Grid>
                   <Grid item xs={12}>
-                    <TextField
-                      required
-                      fullWidth
+
+                    <InputValidate nombre="fechaPresentar"
                       value={convertToDateInputFormat(fechaSeleccionada)}
                       onClick={() =>
                         setFormData({
@@ -520,116 +491,74 @@ function Calendario() {
                           fechaPresentar: convertToDateInputFormat(fechaSeleccionada),
                         })
                       }
-                      InputProps={{
-                        readOnly: true,
-                      }}
-                      type="date"
-                      id="fechaPresentar"
-                      variant="outlined"
-                      label="Fecha de Presentación"
-                      name="fechaPresentar"
+                      readOnly={true}
                     />
                   </Grid>
                   <Grid item xs={12} sm={6}>
-                    <TextField
-                      required
-                      fullWidth
-                      value={formData.horaInicio}
-                      onChange={(e) =>
-                        setFormData({
-                          ...formData,
-                          horaInicio: e.target.value,
-                        })
-                      }
-                      type="time"
-                      id="horaInicio"
-                      variant="outlined"
-                      label="Hora de Inicio"
-                      name="horaInicio"
-                      InputLabelProps={{
-                        shrink: true,
-                      }}
-                    />
-                  </Grid>
-                  <Grid item xs={12} sm={6}>
-                    <TextField
-                      required
-                      fullWidth
-                      value={formData.horaFin}
-                      onChange={(e) => {
-                        const horaInicio = formData.horaInicio;
-                        const horaFin = e.target.value;
-
-                        if (horaInicio && horaFin) {
-                          const [horaInicioHoras, horaInicioMinutos] = horaInicio.split(":");
-                          const [horaFinHoras, horaFinMinutos] = horaFin.split(":");
-
-                          const totalMinutosInicio = parseInt(horaInicioHoras) * 60 + parseInt(horaInicioMinutos);
-                          const totalMinutosFin = parseInt(horaFinHoras) * 60 + parseInt(horaFinMinutos);
-
-                          if (totalMinutosFin > totalMinutosInicio) {
-                            setFormData({ ...formData, horaFin: horaFin });
-                          } else {
-                            setErrorFormu(["La hora de fin debe ser posterior a la hora de inicio"]);
-                          }
-                        } else {
-                          setFormData({ ...formData, horaFin: horaFin });
-                        }
-                      }}
-                      type="time"
-                      id="horaFin"
-                      variant="outlined"
-                      label="Hora de Fin"
-                      name="horaFin"
-                      InputLabelProps={{
-                        shrink: true,
-                      }}
-                    />
-                  </Grid>
-                  <Grid item xs={12}>
-                    <FormControl variant="outlined" fullWidth>
-                      <InputLabel id="sala-label">Sala</InputLabel>
-                      <Select
-                        labelId="sala-label"
-                        id="salaId"
-                        value={formData.salaId}
+                  <InputValidate nombre="horaInicio"
+                        value={formData.horaInicio}
                         onChange={(e) =>
-                          setFormData({ ...formData, salaId: e.target.value })
-                        }
-                        label="Sala"
-                      >
-                        <MenuItem value="">
-                          <em>Ninguna</em>
-                        </MenuItem>
-                        {salasCon.map((sala) => (
-                          <MenuItem key={sala.id} value={sala.id}>{sala.nombre}</MenuItem>
-                        ))}
-                      </Select>
-                    </FormControl>
-                  </Grid>
-                  <Grid item xs={12}>
-                    <TextField
-                      required
-                      fullWidth
-                      value={formData.empleadosRequeridos}
-                      onChange={(e) => {
-                        const value = e.target.value;
-                        if (value.length < 3 && parseInt(value) >= 0) {
                           setFormData({
                             ...formData,
-                            empleadosRequeridos: value,
-                          });
+                            horaInicio: e.target.value,
+                          })
                         }
-                      }}
-                      inputProps={{
-                        maxLength: 2,
-                      }}
-                      type="number"
-                      id="empleadosRequeridos"
-                      variant="outlined"
-                      label="Empleados Requeridos"
-                      name="empleadosRequeridos"
+            
                     />
+                  </Grid>
+                  <Grid item xs={12} sm={6}>
+
+                  <InputValidate nombre="horaFin"
+                       value={formData.horaFin}
+                       onChange={(e) => {
+                         const horaInicio = formData.horaInicio;
+                         const horaFin = e.target.value;
+ 
+                         if (horaInicio && horaFin) {
+                           const [horaInicioHoras, horaInicioMinutos] = horaInicio.split(":");
+                           const [horaFinHoras, horaFinMinutos] = horaFin.split(":");
+ 
+                           const totalMinutosInicio = parseInt(horaInicioHoras) * 60 + parseInt(horaInicioMinutos);
+                           const totalMinutosFin = parseInt(horaFinHoras) * 60 + parseInt(horaFinMinutos);
+ 
+                           if (totalMinutosFin > totalMinutosInicio) {
+                             setFormData({ ...formData, horaFin: horaFin });
+                           } else {
+                             setErrorFormu(["La hora de fin debe ser posterior a la hora de inicio"]);
+                           }
+                         } else {
+                           setFormData({ ...formData, horaFin: horaFin });
+                         }
+                       }}
+            
+                    />
+  
+                  </Grid>
+                  <Grid item xs={12}>
+
+                    <InputValidate nombre="salas" salasCon={salasCon}
+                     value={formData.salaId}
+                     onChange={(e) =>
+                       setFormData({ ...formData, salaId: e.target.value })
+                     }
+                    />
+                  </Grid>
+                  <Grid item xs={12}>
+
+                  <InputValidate nombre="empleado" 
+                     value={formData.empleadosRequeridos}
+                     onChange={(e) => {
+                       const value = e.target.value;
+                       if (value.length < 3 && parseInt(value) >= 0) {
+                         setFormData({
+                           ...formData,
+                           empleadosRequeridos: value,
+                         });
+                       }
+                     }}
+                    />
+
+                    
                   </Grid>
                 </Grid>
               </Box>
@@ -651,14 +580,15 @@ function Calendario() {
                 }
               }}
               variant="contained"
-              color="primary"
+
               sx={{ borderRadius: 20 }}
+
             >
               Confirmar
             </Button>
             {!confirm && (
               <Button
-                variant="outlined"
+                variant="contained"
                 color="error"
                 onClick={() => {
                   setOpenModal(false);
