@@ -219,8 +219,8 @@ onClick={() => nav("/contacto") }
                   </Typography>
                 </MenuItem>
 
-
-                <MenuItem
+{rol === "empleado" ? null : (
+  <MenuItem
                onClick={() => {    rol === 'jefesala' ?  nav("/jefe/mensajes"): nav("/cliente/mensajes") }}
                   sx={{ py: '6px', px: '12px' }}
                 >
@@ -238,25 +238,29 @@ onClick={() => nav("/contacto") }
                     Mensajes
                   </Typography>
                 </MenuItem>
-
-
+) }
                 
-                <MenuItem
-               onClick={() => {    rol === 'jefesala' ?  nav("/jefe/miSala"): nav("/cliente/misShows") }}
-                  sx={{ py: '6px', px: '12px' }}
-                >
-                  <Typography variant="body2" color="white"   sx={{
-                            ...(location.pathname === "/jefe/miSala") ||
-                            (location.pathname === "/cliente/misShows")
-                                ? {
-                                    border: '2px solid white',
-                                    padding: 1,
-                                    borderRadius: 5,
-                                } : {}
-                        }}>
-                  {rol == "jefesala" ? "Mi Sala"  : "Mis Shows" }
-                  </Typography>
-                </MenuItem>
+
+
+                {rol === "empleado"? null : (
+                  <MenuItem
+                  onClick={() => {    rol === 'jefesala' ?  nav("/jefe/miSala"): nav("/cliente/misShows") }}
+                     sx={{ py: '6px', px: '12px' }}
+                   >
+                     <Typography variant="body2" color="white"   sx={{
+                               ...(location.pathname === "/jefe/miSala") ||
+                               (location.pathname === "/cliente/misShows")
+                                   ? {
+                                       border: '2px solid white',
+                                       padding: 1,
+                                       borderRadius: 5,
+                                   } : {}
+                           }}>
+                     {rol == "jefesala" ? "Mi Sala"  : "Mis Shows" }
+                     </Typography>
+                   </MenuItem>
+                ) }
+                
 
               </Box>
             </Box>

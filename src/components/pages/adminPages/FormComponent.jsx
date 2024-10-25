@@ -1444,3 +1444,163 @@ export const FormJefe = ({ open, close }) => {
  * *
  * */
 
+/**
+ * 
+ * 
+ * eset es el fromulario para el pedido
+ */
+
+
+
+
+export const FormPedido = ({ open, close, record, onSubmitSuccess }) => {
+
+  const [formData, setFormData] = useState({
+    showId: record?.showId || "",
+    salaId: record?.salaId || "",
+    estado: record?.estado || "",
+    empleadosRequeridos: record?.empleadosRequeridos || "",
+    empleadosAsignados: record?.empleadosAsignados || "",
+  });
+  useEffect(() => {
+    if (record) {
+      setFormData({
+        showId: record.showId,
+        salaId: record.salaId,
+        estado: record.estado,
+        empleadosRequeridos: record.empleadosRequeridos,
+        empleadosAsignados: record.empleadosAsignados,
+      });
+    } else {
+      setFormData({
+        showId: "",
+        salaId: "",
+        estado: "",
+        empleadosRequeridos: "",
+        empleadosAsignados: "",
+      });
+    }
+
+  }, [record, open]);
+
+  const hanSubmit = async (e) => {
+    try {
+      const regis = await axios.post('http://localhost:3001/api/auth/register', formData);
+      console.log(regis.data);
+      onSubmitSuccess();
+      close();
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  const hanUpdate = async (e) => {
+
+    try {
+      const regis = updateUser(record.id, formData);
+      console.log(regis.data);
+      onSubmitSuccess();
+      close();
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleSubmit = (e) => {
+    if (record) {
+      hanUpdate(formData);
+    } else {
+      hanSubmit(formData);
+    }
+
+  }
+  return (
+    <FormComponent
+      open={open}
+      onClose={close}
+      title={record ? "Actualizar Administrador" : "Crear Administrador"}
+      children={
+        <Box sx={{ mt: 3, p: 3 }} component="form" noValidate onSubmit={handleSubmit}>
+          <Grid container spacing={2}>
+            <Grid item xs={12} sm={6}>
+              <InputValidate nombre="nombre"
+                value={formData.nombre}
+                onChange={(e) =>
+                  setFormData({ ...formData, nombre: e.target.value })}
+                readOnly={record ? true : false}
+              />
+
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <InputValidate nombre="apellido"
+                value={formData.apellido}
+                onChange={(e) =>
+                  setFormData({ ...formData, apellido: e.target.value })}
+                readOnly={record ? true : false}
+              />
+            </Grid>
+
+            <Grid item xs={12} sm={6}>
+              <InputValidate nombre="Tpidentificacion"
+                value={formData.tipIdentidad}
+                onChange={(e) =>
+                  record ? null : setFormData({ ...formData, tipIdentidad: e.target.value })
+                }
+                readOnly={record ? true : false}
+              />
+
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <InputValidate nombre="identificacion"
+                value={formData.identificacion}
+                onChange={(e) =>
+                  setFormData({ ...formData, identificacion: e.target.value })
+                }
+                readOnly={record ? true : false}
+
+              />
+            </Grid>
+
+            <Grid item xs={12}>
+              <InputValidate nombre="email"
+                value={formData.email}
+                onChange={(e) =>
+                  setFormData({ ...formData, email: e.target.value })
+                }
+              />
+
+            </Grid>
+            <Grid item xs={12}>
+              <InputValidate nombre="telefono"
+                value={formData.telefono}
+                onChange={(e) =>
+                  setFormData({ ...formData, telefono: e.target.value })
+                }
+              />
+
+            </Grid>
+            {record ? null : (
+              <>
+                <Grid item xs={12}>
+                  <InputValidate nombre="pass"
+                    value={formData.password}
+                    onChange={(e) =>
+                      setFormData({ ...formData, password: e.target.value })
+                    }
+                  />
+
+                </Grid></>
+            )}
+
+          </Grid>
+        </Box>
+      }
+      actions={
+        <>
+          <Button variant="contained" className="btn-admin-panel" onClick={handleSubmit}>
+            {record ? "Actualizar" : "Crear"}
+          </Button>
+        </>
+      }
+    />
+  );
+};

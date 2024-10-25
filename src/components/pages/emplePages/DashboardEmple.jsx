@@ -27,7 +27,9 @@ import {
   ExpandLess as ExpandLessIcon,
   Edit as EditIcon
 } from '@mui/icons-material'
-import { motion, AnimatePresence } from 'framer-motion'
+import { motion, AnimatePresence } from 'framer-motion';
+import HeaderPublic from "../../partials/HeaderPublic";
+import FooterPublic from "../../partials/FooterPublic";
 
 const EmployeeDashboard = ({ employee, tasks }) => {
   const [expandedTask, setExpandedTask] = useState(null)
@@ -46,6 +48,8 @@ const EmployeeDashboard = ({ employee, tasks }) => {
   }
 
   return (
+    <>
+    <HeaderPublic />
     <Box sx={{ maxWidth: 1200, margin: 'auto', padding: 2, bgcolor: 'background.default', minHeight: '100vh' }}>
       <Typography variant="h4" gutterBottom component={motion.h1} {...fadeInUp} sx={{ mb: 4, color: 'primary.main' }}>
         Dashboard del Empleado
@@ -191,6 +195,8 @@ const EmployeeDashboard = ({ employee, tasks }) => {
         )}
       </AnimatePresence>
     </Box>
+    <FooterPublic/>
+    </>
   )
 }
 
@@ -205,12 +211,12 @@ const employeeData = {
 const tasksData = [
   {
     id: 1,
-    title: "Implementar nueva funcionalidad",
-    description: "Desarrollar e implementar la nueva funcionalidad de chat en tiempo real para la aplicación web.",
+    title: "Tienes Un Show Proximo",
+    description: "el show sera en el teatro colon",
     status: "En progreso",
     dueDate: "2023-06-30"
   },
-  {
+  /* {
     id: 2,
     title: "Corregir bug en la página de inicio",
     description: "Hay un problema de renderizado en la página de inicio cuando se accede desde dispositivos móviles. Investigar y corregir el issue.",
@@ -230,7 +236,7 @@ const tasksData = [
     description: "Realizar una auditoría de rendimiento y optimizar los puntos críticos identificados para mejorar la velocidad de carga de la aplicación.",
     status: "Pendiente",
     dueDate: "2023-07-05"
-  }
+  } */
 ]
 
 export default function App() {
