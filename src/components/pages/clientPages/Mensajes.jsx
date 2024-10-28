@@ -222,7 +222,7 @@ const [logueado, setLogueado] = useState(null);
         <h1>Chats</h1>
       </div>
       <div className="chat-list-search">
-        <Input placeholder="Buscar Contacto " />
+        <Input placeholder="Buscar contacto" />
       </div>
       <div className="chat-list-items">
         {chats.map(chat =>{  return(
@@ -307,7 +307,7 @@ const [logueado, setLogueado] = useState(null);
           <div className="chat-info-header" style={{color:"white"}}> 
             <Avatar src={`/placeholder-avatar-${selectedChat}.jpg`} alt={currentChat?.name} fallback={currentChat?.name.substring(0, 2)} />
             <h2>{currentChat?.name}</h2>
-            <p>Animate Enviame Un Mensaje</p>
+            <p>Anímate, envíame un mensaje</p>
           </div>
         </div>
       )}

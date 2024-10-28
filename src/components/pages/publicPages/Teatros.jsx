@@ -240,7 +240,7 @@ console.log(error);
             mb: 4,
             textShadow: `2px 2px 4px ${theme.palette.primary.light}`,
           }}>
-            Descubre Teatros Mágicos
+            Descubre teatros mágicos
           </Typography>
         </motion.div>
 
@@ -353,7 +353,7 @@ console.log(error);
                     color: "linear-gradient(45deg,#66A5AD ,#07575B ,#003B46)",
                     textShadow: `1px 1px 2px ${theme.palette.secondary.light}`,
                   }}>
-                    Detalles del Teatro
+                    Detalles del teatro
                   </Typography>
                   <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
@@ -378,23 +378,7 @@ console.log(error);
                   }}>
                     Ubicación
                   </Typography>
-                  {/* <Box
-                    sx={{
-                      height: '200px',
-                      bgcolor: theme.palette.primary.light,
-                      borderRadius: '10px',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      color: theme.palette.primary.contrastText,
-                    }}
-                  >
-                    
-                    <Theaters sx={{ fontSize: 60, mb: 2 }} />
-                    <Typography variant="body2">
-                      Mapa no disponible
-                    </Typography>
-                  </Box> */}
+                  
                   <Map address={selectedTheater?.direccion || selectedTheater?.nombre}/>
                 </Grid>
               </Grid>
@@ -412,6 +396,7 @@ console.log(error);
                   borderColor: theme.palette.secondary.dark,
                   backgroundColor: theme.palette.secondary.light,
                 },
+                textTransform:"none",
               }}
             >
               Cerrar
@@ -429,9 +414,11 @@ console.log(error);
                   bgcolor: theme.palette.secondary.dark,
                   boxShadow: `0 6px 12px ${theme.palette.secondary.main}60`,
                 },
+                textTransform:"none",
+              
               }}
             >
-              Contactar Teatro
+              Contactar teatro
             </Button>
           </DialogActions>
         </Dialog>

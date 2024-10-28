@@ -48,7 +48,7 @@ export function GraficaLine() {
       labels: currentTheater.shows.map(show => show.date),
       datasets: [
         {
-          label: `Cantidad de Shows - ${currentTheater.name}`,
+          label: `Cantidad de shows - ${currentTheater.name}`,
           data: currentTheater.shows.map(show => show.count),
           fill: false,
           borderColor: 'rgb(75, 192, 192)',
@@ -67,7 +67,7 @@ export function GraficaLine() {
       },
       title: {
         display: true,
-        text: 'Cantidad de Shows por Teatro'
+        text: 'Cantidad de shows por teatro'
       }
     },
     scales: {
@@ -75,7 +75,7 @@ export function GraficaLine() {
         beginAtZero: true,
         title: {
           display: true,
-          text: 'Cantidad de Shows'
+          text: 'Cantidad de shows'
         }
       },
       x: {
@@ -101,7 +101,7 @@ export function GraficaLine() {
             labels: theater.shows.map(show => show.date),
             datasets: [
               {
-                label: `Cantidad de Shows - ${theater.name}`,
+                label: `Cantidad de shows - ${theater.name}`,
                 data: theater.shows.map(show => show.count),
                 fill: false,
                 borderColor: 'rgb(75, 192, 192)',

@@ -136,11 +136,11 @@ const TheaterVolcanicLogin = () => {
       forgetPass({ email: texto })
         .then(() => {
           setDialogPassword(false);
-          setSnackbarMessage('¡Email De Recuperacion Enviado Con Exito!');
+          setSnackbarMessage('¡Email de recuperacion enviado con exito!');
           setSnackbarSeverity('success');
         })
         .catch((error) => {
-          setSnackbarMessage('Error Al Recuperar Contraseña');
+          setSnackbarMessage('Error al recuperar contraseña');
           setSnackbarSeverity('error');
           console.error(error);
         });
@@ -177,7 +177,7 @@ const TheaterVolcanicLogin = () => {
           >
             <Grid sx={{ marginBottom:3 }}>
               <center>
-              <Typography sx={{ width:"80%" }}>Se Te Enviara Un Email Para Recuperar Tu Contraseña(solo valido por 5 minutos)</Typography>
+              <Typography sx={{ width:"80%" }}>Se te enviara un email para recuperar tu contraseña(solo válido por 5 minutos)</Typography>
 
               </center>
             </Grid>
@@ -200,7 +200,8 @@ const TheaterVolcanicLogin = () => {
             background:"#66A5AD",
             width:"50%",
             borderRadius:10,
-            color:"black"
+            color:"black",
+            textTransform:"none",
           }}
         >
           Enviar
@@ -290,7 +291,7 @@ const TheaterVolcanicLogin = () => {
             transition={{ duration: 0.5, delay: 0.5 }}
           >
             <Typography component="h1" variant="h4" sx={{ color: "black", mb: 3 }}>
-              Inicia Sesión
+              Inicia sesión
             </Typography>
           </motion.div>
 
@@ -341,7 +342,7 @@ const TheaterVolcanicLogin = () => {
                 />
               </Grid>
               <Grid item xs={12}>
-                <a  onClick={() => setDialogPassword(true)}>¿Olvidaste Tu Contraseña?</a>
+                <a  onClick={() => setDialogPassword(true)}>¿Olvidaste tu contraseña?</a>
               </Grid>
             </Grid>
             <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
@@ -358,6 +359,7 @@ const TheaterVolcanicLogin = () => {
                   "&:hover": {
                     bgcolor: "#5497A7", // Cambia el color de fondo del botón en hover
                   },
+                  textTransform:"none",
                 }}
                 disabled={isSubmitting}
               >

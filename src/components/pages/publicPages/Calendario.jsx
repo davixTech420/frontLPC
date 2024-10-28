@@ -213,7 +213,7 @@ function Calendario() {
         transition={{ duration: 0.5 }}
       >
         <Typography variant="h3" align="center" sx={{ mt: 4, mb: 4, fontWeight: 'bold', color: theme.palette.primary.main }}>
-          Calendario de Eventos
+          Calendario de eventos
         </Typography>
       </motion.div>
 
@@ -265,7 +265,7 @@ function Calendario() {
             >
               <Box sx={{ p: 3 }}>
                 <Typography variant="h5" align="center" gutterBottom>
-                  Eventos Activos
+                  Eventos activos
                 </Typography>
                 <List>
                   <AnimatePresence>
@@ -387,7 +387,10 @@ function Calendario() {
             variant="contained"
             color="primary"
             className="botnWelcome"
-            sx={{ borderRadius: 20 }}
+            sx={{ borderRadius: 20 ,
+              textTransform: "none", 
+            }}
+
           >
             Cerrar
           </Button>
@@ -404,7 +407,7 @@ function Calendario() {
         }}
         TransitionComponent={Fade}
         transitionDuration={{ enter: 500, exit: 500 }}
-        title={"Fecha Válida"}
+        title={"Fecha válida"}
         children={
           <>
             {confirm ? (
@@ -449,7 +452,7 @@ function Calendario() {
 
                           }}
                         >
-                          Seleccionar Imagen
+                          Seleccionar imagen
                         </Button>
                       </label>
                       {image ? (
@@ -581,7 +584,9 @@ function Calendario() {
               }}
               variant="contained"
 
-              sx={{ borderRadius: 20 }}
+              sx={{ borderRadius: 20,
+                textTransform: "none", 
+               }}
 
             >
               Confirmar
@@ -594,7 +599,9 @@ function Calendario() {
                   setOpenModal(false);
                   setSelectedSlot(false);
                 }}
-                sx={{ borderRadius: 20 }}
+                sx={{ borderRadius: 20 ,
+                  textTransform: "none", 
+                }}
               >
                 Cerrar
               </Button>
@@ -616,7 +623,7 @@ function Calendario() {
         title={logueado == null ? "Error" : "Error"}
         children={
           <Typography variant="body1" align="center">
-            {logueado == null ? "Inicia Sesión" : "Fecha Inválida"}
+            {logueado == null ? "Inicia sesión" : "Fecha inválida"}
           </Typography>
         }
         actions={
@@ -624,7 +631,9 @@ function Calendario() {
             variant="contained"
             color="error"
             onClick={() => setOpenModal(false)}
-            sx={{ borderRadius: 20 }}
+            sx={{ borderRadius: 20,
+              textTransform: "none", 
+            }}
           >
             Cerrar
           </Button>

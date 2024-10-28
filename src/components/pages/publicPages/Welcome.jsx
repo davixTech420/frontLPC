@@ -194,11 +194,11 @@ export default function MinimalistEventShowcase() {
 
           <Container maxWidth="lg" sx={{ py: 4 }}>
             <Typography variant="h3" component="h1" sx={{ fontWeight: 700, color: 'white', mb: 4, textAlign: 'center' }}>
-              Descubre Eventos Increíbles
+              Descubre eventos increíbles
             </Typography>
 
             <motion.div
-              initial={{ opacity: 0, y: 20 }}
+              initial={{ opacity:0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5 }}
             >
@@ -287,7 +287,7 @@ export default function MinimalistEventShowcase() {
                       window.location.href = 'https://tuboleta.com/'
                     }}
                   >
-                    Reservar Ahora
+                    Reservar ahora
                   </Button>
                 </Box>
                 <Box
@@ -346,7 +346,7 @@ export default function MinimalistEventShowcase() {
               transition={{ duration: 0.5, delay: 0.4 }}
             >
               <Typography variant="h5" sx={{ fontWeight: 600, mb: 3 , color:"white"}}>
-                Próximos Eventos
+                Próximos eventos
               </Typography>
               <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(250px, 1fr))', gap: 3 }}>
                 {filteredShows.map((show) => (
@@ -403,7 +403,7 @@ export default function MinimalistEventShowcase() {
                           window.location.href = 'https://tuboleta.com/'
                         }}
                       >
-                        Ver Detalles
+                        Ver detalles
                       </Button>
                     </Box>
                   </Box>
@@ -419,7 +419,7 @@ export default function MinimalistEventShowcase() {
               >
                 <Box sx={{ mt: 6, p: 4, bgcolor: 'background.paper', borderRadius: 4, boxShadow: '0 10px 30px rgba(0, 0, 0, 0.1)' }}>
                   <Typography variant="h4" sx={{ fontWeight: 700, color: 'primary.main', mb: 3 }}>
-                    No Te Pierdas Nuestro Próximo  Gran Evento
+                  No te pierdas nuestro próximo gran evento
                   </Typography>
                   <Box sx={{ display: 'flex', flexDirection: isMobile ? 'column' : 'row', gap: 4 }}>
                     <Box sx={{ flex: 1 }}>
@@ -444,7 +444,7 @@ export default function MinimalistEventShowcase() {
                           window.location.href = 'https://tuboleta.com/'
                         }}
                       >
-                        Asegura Tu Entrada
+                        Asegura tu entrada
                       </Button>
                     </Box>
                     <Box

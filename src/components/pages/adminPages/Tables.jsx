@@ -180,7 +180,7 @@ const VistaTabla = () => {
           throw new Error("Operación no soportada para esta tabla");
       }
       actualizarDatos();
-      showSnackbar("Registro inactivado con éxito", "success");
+      showSnackbar("Registro inactivado con éxito", "suc  cess");
     } catch (error) {
       console.error(error);
       showSnackbar("Error al inactivar el registro", "error");
@@ -265,6 +265,9 @@ const VistaTabla = () => {
                     onClick={() => {
                       setOpenForm(true);
                       setSelectedRow(null);
+                    }}
+                    sx={{
+                      textTransform:"none",
                     }}
                   >
                     Crear

@@ -28,7 +28,7 @@ function nav(path){
               LPC
             </Typography>
             <Typography variant="body2">
-              LPC Los Mejores En Logistica Buscas Teatros Disponibles Para Tu Show  Y gente Tecnica Y Capacitada 
+            Los mejores en logística buscas teatros disponibles para tu show y gente técnica y capacitada 
             </Typography>
             <Box sx={{ mt: 2 }}>
               <IconButton aria-label="Facebook" sx={{ color: 'white' }}>
@@ -44,12 +44,12 @@ function nav(path){
           </Grid>
           <Grid item xs={12} md={6}>
             <Typography variant="h6" color="white">
-              Contactenos
+            Contáctenos
             </Typography>
             <Typography variant="body2">
               Email: datech@datech
               <br />
-              Phone: +57 324-285-5700
+              Telefono: +57 324-285-5700
             </Typography>
             <Box sx={{ mt: 2 }}>
               <Button onClick={() => nav("/condiciones")} variant="outlined"  sx={{
@@ -59,8 +59,9 @@ function nav(path){
           backgroundColor: 'white',
           color: 'black',
         },
+        textTransform:"none",
       }}>
-                Terminos & Condiciones
+                Terminos y condiciones
               </Button>
             </Box>
           </Grid>
@@ -68,7 +69,7 @@ function nav(path){
         <Divider sx={{ mt: 2 }} />
         <Box sx={{ textAlign: 'center', mt: 1 }}>
           <Typography variant="body2" color="white">
-            Copyright Datech Todos Los Derechos Reservados Al Desarrollador
+          Copyright Datech todos los derechos reservados al desarrollador
           </Typography>
         </Box>
       </Container>

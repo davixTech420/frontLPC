@@ -179,11 +179,10 @@ export default function HeaderRol() {
       open={isMenuOpen}
       onClose={handleMenuClose}
     >
-      {/*  <MenuItem onClick={handleMenuClose}>Profile</MenuItem> */}
-      <MenuItem sx={{ backgroundColor: "red", borderRadius: "20px" }} onClick={() => { handleMenuClose(); localStorage.removeItem("token"); window.location.reload(); }}>Cerrar Secion</MenuItem>
-    </Menu>
+      
+        <MenuItem sx={{ backgroundColor: "transparent", borderRadius: "20px" }} onClick={() => { handleMenuClose(); localStorage.removeItem("token"); window.location.reload(); }}>Cerrar sesión</MenuItem>
+      </Menu>
   );
-
   const mobileMenuId = "primary-search-account-menu-mobile";
   const location = useLocation();
   const mainListItems = (

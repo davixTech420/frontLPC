@@ -128,7 +128,7 @@ export const FormAdmin = ({ open, close, record, onSubmitSuccess }) => {
     <FormComponent
       open={open}
       onClose={close}
-      title={record ? "Actualizar Administrador" : "Crear Administrador"}
+      title={record ? "Actualizar administrador" : "Crear administrador"}
       children={
         <Box sx={{ mt: 3, p: 3 }} component="form" noValidate onSubmit={handleSubmit}>
           <Grid container spacing={2}>
@@ -207,7 +207,11 @@ export const FormAdmin = ({ open, close, record, onSubmitSuccess }) => {
       }
       actions={
         <>
-          <Button variant="contained" className="btn-admin-panel" onClick={handleSubmit}>
+          <Button variant="contained" className="btn-admin-panel" onClick={handleSubmit}
+          sx={{
+            textTransform:"none",
+          }}
+          >
             {record ? "Actualizar" : "Crear"}
           </Button>
         </>

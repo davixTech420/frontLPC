@@ -209,14 +209,8 @@ export default function PublicRegis() {
             <LockOutlinedIcon sx={{ color: "white" }} />
           </Avatar>
           <Typography component="h1" variant="h5">
-            Crear Cuenta
+            Crear cuenta
           </Typography>
-
-
-
-
-
-
           <Box
             sx={{ mt: 3, p: 3 }}
             component="form"
@@ -226,18 +220,12 @@ export default function PublicRegis() {
 
             <Grid container spacing={2}>
               <Grid item xs={12} sm={6}>
-               
-
-
-
-
               <InputValidate nombre="nombre"
                 value={formData.nombre}
                 onChange={(e) =>
                   setFormData({ ...formData, nombre: e.target.value })
                 }
               />
-               
               </Grid>
               <Grid item xs={12} sm={6}>
               <InputValidate nombre="apellido"
@@ -307,9 +295,10 @@ export default function PublicRegis() {
                   "&:hover": {
                     bgcolor: "#5497A7", // Cambia el color de fondo del botón en hover
                   },
+                  textTransform:"none",
                 }}
               >
-                Crear Cuenta
+                Crear cuenta
               </Button>
             </center>
             {/*--------*/}

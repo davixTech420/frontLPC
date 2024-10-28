@@ -464,24 +464,37 @@ onClick={() => nav("/contacto") }
           >
               <Button
             onClick={() => nav("/calendario")}
-             sx={{ my: 2, color: location.pathname === "/calendario" ? "black" : "white", display: "block",backgroundColor: location.pathname === "/calendario" ? "#C4DFE6" : "" }}>
+             sx={{ my: 2, color: location.pathname === "/calendario" ? "black" : "white", display: "block",backgroundColor: location.pathname === "/calendario" ? "#C4DFE6" : "",
+              textTransform: "none", 
+              }}>
               Calendario
             </Button>
               <Button
             onClick={() => nav("/teatros")}
-            sx={{ my: 2, color: location.pathname === "/teatros" ? "black" : "white", display: "block",backgroundColor: location.pathname === "/teatros" ? "#C4DFE6" : "" }}>
+            sx={{ my: 2, color: location.pathname === "/teatros" ? "black" : "white", display: "block",backgroundColor: location.pathname === "/teatros" ? "#C4DFE6" : "",
+              textTransform: "none", 
+
+             }}
+            
+            >
               Teatros
             </Button>
             <Button
               onClick={() => nav("/contacto")}
-              sx={{ my: 2, marginRight: 2,color: location.pathname === "/contacto" ? "black" : "white", display: "block",backgroundColor: location.pathname === "/contacto" ? "#C4DFE6" : "" }}
+              sx={{ my: 2, marginRight: 2,color: location.pathname === "/contacto" ? "black" : "white", display: "block",backgroundColor: location.pathname === "/contacto" ? "#C4DFE6" : "",
+                textTransform: "none", 
+               }}
+
+          
             >
               Contactanos
             </Button>
           
             <Button
               onClick={() => nav(buttonRoute)}
-                sx={{ my: 2, marginRight: 2,color: location.pathname === "/loginPublic" || location.pathname === "/registrar" ? "black" : "white", display: "block",backgroundColor: location.pathname === "/loginPublic" || location.pathname === "/registrar" ? "#C4DFE6" : "" }}
+                sx={{ my: 2, marginRight: 2,color: location.pathname === "/loginPublic" || location.pathname === "/registrar" ? "black" : "white", display: "block",backgroundColor: location.pathname === "/loginPublic" || location.pathname === "/registrar" ? "#C4DFE6" : "",
+                  textTransform: "none", 
+                 }}
             >
               {buttonText}
             </Button>

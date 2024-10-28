@@ -102,13 +102,8 @@ export default function ProfileViewInteractive() {
 
         /* establecemos los datos que van en el fromulario lo que envia a a la bd puede ir cambiando */
         setFormData({
-          /*  nombre: cliente.nombre,
-           apellido: cliente.apellido,
-           tipIdentidad: cliente.tipIdentidad,
-           identificacion: cliente.identificacion, */
            telefono: respoClien.data.telefono,
            email: respoClien.data.email,
-         
            estado: true,
            nacionCliente: resClienForm.data.nacionCliente,
            direccion: resClienForm.data.direccion,
@@ -309,8 +304,11 @@ console.log(error);
                           type="submit"
                           variant="contained"
                           color="primary"
+                          sx={{
+                            textTransform:"none",
+                          }}
                         >
-                          Save Changes
+                          Guardar
                         </Button>
                       </Grid>
                     </Grid>
@@ -324,16 +322,16 @@ console.log(error);
                   >
                     <Typography variant="body1" paragraph sx={{ mt: 2 }}>
                       Bienvenido{" "}
-                      {cliente.nombre + " Puedes Actualizar Tus Datos Aqui"}
+                      {cliente.nombre + " Puedes actualizar tus datos aqui"}
                     </Typography>
 
                     <Box sx={{ mb: 3 }}>
                       <Typography variant="h6" gutterBottom>
-                        Mis Shows
+                        Mis shows
                       </Typography>
                       <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1 }}>
                       {Shows.length === 0 ? (
-                          <p>No Tienes Ningun Show</p>
+                          <p>No tienes ningún show</p>
                         ) : (
                           Shows.map((show) => (
                             <motion.div

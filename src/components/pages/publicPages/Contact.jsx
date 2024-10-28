@@ -20,6 +20,7 @@ import EmailIcon from "@mui/icons-material/Email";
 import emailjs from "emailjs-com";
 import PhoneIcon from "@mui/icons-material/Phone";
 import { FormComponent } from "../adminPages/FormComponent";
+import InputValidate from "../component/ValidateInput";
 
 export default function Contact() {
   const [formData, setFormData] = useState({
@@ -134,37 +135,30 @@ export default function Contact() {
                 Ahora
               </Typography>
               <Typography variant="h4" gutterBottom>
-                Contactanos
+              Contáctanos
               </Typography>
               <Typography variant="body1" color="textSecondary" gutterBottom>
-                ¿Estas Interesedo En Un Teatro O Tienes Alguna Duda?
+                ¿Estas Interesado en un teatro o tienes alguna duda?
               </Typography>
               <Grid container spacing={2} sx={{ mt: 2 }}>
                 <Grid item xs={12} md={6}>
-                  <TextField
-                   required
-                    label="Nombre"
-                    value={formData.nombre}
-                    onChange={(e) =>
-                      setFormData({ ...formData, nombre: e.target.value })
-                    }
-                    fullWidth
-                  />
+               
+                  <InputValidate nombre="nombre" 
+  value={formData.nombre}
+  onChange={(e) =>
+    setFormData({ ...formData, nombre: e.target.value })
+  }/>
                 </Grid>
                 <Grid item xs={12} md={6}>
-                  <TextField
-                  required
-                    label="Apellido"
-                    value={formData.apellido}
-                    onChange={(e) =>
-                      setFormData({ ...formData, apellido: e.target.value })
-                    }
-                    fullWidth
-                  />
+<InputValidate nombre="apellido" 
+ value={formData.apellido}
+ onChange={(e) =>
+   setFormData({ ...formData, apellido: e.target.value })
+ }/>
                 </Grid>
-
                 <Grid item xs={12}>
                   <TextField
+                  variant="standard"
                   required
                     label="Mensaje"
                     value={formData.mensaje}
@@ -183,8 +177,12 @@ export default function Contact() {
                     variant="contained"
                     color="success"
                     fullWidth
+                    sx={{
+
+                      textTransform:"none",
+                    }}
                   >
-                    <WhatsAppIcon /> Enviar Mensaje
+                    <WhatsAppIcon /> Enviar mensaje
                   </Button>
                   <Button></Button>
                   <Button
@@ -192,8 +190,11 @@ export default function Contact() {
                     variant="contained"
                     color="error"
                     fullWidth
+                    sx={{  
+                      textTransform:"none",
+                    }}
                   >
-                    <EmailIcon /> Enviar Mensaje
+                    <EmailIcon /> Enviar mensaje
                   </Button>
                 </Grid>
               </Grid>
@@ -246,7 +247,7 @@ export default function Contact() {
                         color: "white",
                       },
                     }}
-                    primary="Phone"
+                    primary="Telefono"
                     secondary="+57 3242855700"
                   />
                 </ListItem>
