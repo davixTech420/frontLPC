@@ -22,6 +22,9 @@ return axios.get(`${baseUrl}/shows`);
 export const getSalas = () => {
     return axios.get(`${baseUrl}/teatros`);
 }
+export const getSalaFavorita = () => {
+    return axios.get(`${baseUrl}/salaFavorita`);
+}
     
 export const getSalasId = (id) => {
     return axios.get(`${baseUrl}/salas/${id}`);

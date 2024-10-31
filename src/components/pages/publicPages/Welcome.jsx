@@ -1,8 +1,11 @@
 import React, { useState, useEffect } from 'react'
 import { ThemeProvider, createTheme, responsiveFontSizes } from '@mui/material/styles'
-import { AnimatePresence, motion } from 'framer-motion'
+import { AnimatePresence, motion } from 'framer-motion' 
 import {
   Box,
+  Card,
+  CardMedia,
+  CardContent,
   Container,
   Typography,
   Button,
@@ -22,10 +25,16 @@ import {
   Search,
   Favorite,
   FavoriteBorder,
-} from '@mui/icons-material'
+  TheatersOutlined,
+  Star,
+  ExpandMore,
+  ExpandLess,
+
+} from '@mui/icons-material';
+
 
 // Assuming these functions are imported from your services
-import { SrcImagen, getShows, getSalasId } from '../../../services/publicServices'
+import { SrcImagen, getShows, getSalasId , getSalaFavorita} from '../../../services/publicServices';
 import HeaderPublic from "../../partials/HeaderPublic";
 import FooterPublic from '../../partials/FooterPublic'
 import Map from "../component/Map";
@@ -90,11 +99,21 @@ export default function MinimalistEventShowcase() {
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState(null)
   const [searchTerm, setSearchTerm] = useState('')
-  const [favorites, setFavorites] = useState([])
-
+  const [favorites, setFavorites] = useState([]);
+  const [salaFav,setSalaFav] = useState(null);
+  const [isExpanded, setIsExpanded] = useState(false)
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'))
 
   useEffect(() => {
+
+
+    const fetchFavorites = async () => {
+      await getSalaFavorita().then(response => {
+        setSalaFav(response.data);
+      }).catch(error => {
+        console.log(error);
+      })
+    }
     const fetchShows = async () => {
       try {
         setIsLoading(true)
@@ -120,12 +139,12 @@ export default function MinimalistEventShowcase() {
         setIsLoading(false)
       } catch (error) {
         console.error(error)
-        setError('Failed to fetch shows. Please try again later.')
+        setError('Error al traer datos del api. Espere un momento y vuelve a intentarlo.')
         setIsLoading(false)
       }
     }
-
-    fetchShows()
+    fetchFavorites();
+    fetchShows();
   }, [])
 
   const nextShowHandler = () => {
@@ -411,6 +430,106 @@ export default function MinimalistEventShowcase() {
               </Box>
             </motion.div>
 
+
+
+            {salaFav &&
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: 0.6 }}
+              >
+                <Box
+                sx={{ mt: 6, p: 4, bgcolor: 'background.paper', borderRadius: 4, boxShadow: '0 10px 30px rgba(0, 0, 0, 0.1)' }}
+                >
+                  <h1>Teatro favorito</h1>
+                 <Card 
+        sx={{ 
+          maxWidth: "100%", 
+          m: 2, 
+          borderRadius: 4, 
+          overflow: 'hidden',
+          boxShadow: '0 10px 30px rgba(0,0,0,0.1)',
+          background: 'linear-gradient(145deg, #ffffff, #f0f0f0)',
+        }}
+      >
+        <Box sx={{ position: 'relative', overflow: 'hidden' }}>
+          <motion.div
+            whileHover={{ scale: 1.05 }}
+            transition={{ duration: 0.3 }}
+          >
+            <Box
+              component="img"
+              src={SrcImagen(salaFav?.imagen) || '/placeholder.svg?height=200&width=345'}
+              alt="Teatro con mas popularidad"
+              sx={{
+                width: '100%',
+                height: isMobile? 200:345 ,
+                objectFit: 'cover',
+              }}
+            />
+          </motion.div>
+          <Box
+            sx={{
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              right: 0,
+              p: 2,
+              background: 'linear-gradient(to bottom, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0) 100%)',
+            }}
+          >
+            <Typography variant="h5" component="div" sx={{ color: 'white', fontWeight: 'bold' }}>
+ {salaFav?.nombre}
+            </Typography>
+          </Box>
+        </Box>
+        <CardContent sx={{ pt: 2, pb: 1 }}>
+          <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
+            <TheatersOutlined sx={{ mr: 1, color: 'primary.main' }} />
+            <Chip 
+              icon={<Star sx={{ color: 'gold !important' }} />} 
+              label="4.9" 
+              size="small" 
+              sx={{ 
+                bgcolor: 'primary.main', 
+                color: 'white',
+                fontWeight: 'bold',
+                ml: 1,
+              }} 
+            />
+          </Box>
+          <AnimatePresence>
+            {isExpanded && (
+              <motion.div
+                initial={{ opacity: 0, height: 0 }}
+                animate={{ opacity: 1, height: 'auto' }}
+                exit={{ opacity: 0, height: 0 }}
+                transition={{ duration: 0.3 }}
+              >
+                <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+                  El Teatro Colón es uno de los teatros de ópera más importantes del mundo por su acústica y trayectoria. Ubicado en la Ciudad de Buenos Aires, Argentina, es un ícono cultural y arquitectónico.
+                </Typography>
+              </motion.div>
+            )}
+          </AnimatePresence>
+          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <Chip label="Ópera" size="small" sx={{ bgcolor: 'secondary.main', color: 'white' }} />
+            <motion.div whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }}>
+              <IconButton 
+                onClick={() => setIsExpanded(!isExpanded)}
+                aria-expanded={isExpanded}
+                aria-label="show more"
+              >
+                {isExpanded ? <ExpandLess /> : <ExpandMore />}
+              </IconButton>
+            </motion.div>
+          </Box>
+        </CardContent>
+      </Card>
+                </Box>
+                </motion.div>
+
+            }
             {nextShow && (
               <motion.div
                 initial={{ opacity: 0, y: 20 }}

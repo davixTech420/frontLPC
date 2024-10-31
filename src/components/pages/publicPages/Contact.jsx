@@ -168,6 +168,8 @@ export default function Contact() {
                     multiline
                     rows={4}
                     fullWidth
+                    error={formData.mensaje.length === 0}
+                   helperText={formData.mensaje.length > 0 ? null : "Campo requerido"}
                   />
                 </Grid>
                 <Grid item xs={12}></Grid>
