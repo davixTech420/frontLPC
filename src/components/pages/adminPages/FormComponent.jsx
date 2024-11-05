@@ -952,7 +952,7 @@ este es  el fromulario para crear shows *
 *
 *
 **/
-export const FormShows = ({ open, close }) => {
+export const FormShows = ({ open, close,onSubmitSuccess }) => {
   const [salas, setSalas] = useState([]);
   const [image, setImage] = useState(null);
   const [formData, setFormData] = useState({
