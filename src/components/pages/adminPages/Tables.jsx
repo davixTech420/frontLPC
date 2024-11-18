@@ -57,7 +57,7 @@ const VistaTabla = () => {
   const fetchData = useCallback(async () => {
     try {
       const response = await axios.get(
-        `http://localhost:3001/api/admin/tabla/${tablaId}`,
+        `https://backlpc-production.up.railway.app/api/admin/tabla/${tablaId}`,
         {
           headers: {
             Authorization: localStorage.getItem("token"),
