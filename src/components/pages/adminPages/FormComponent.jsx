@@ -96,7 +96,7 @@ export const FormAdmin = ({ open, close, record, onSubmitSuccess }) => {
 
   const hanSubmit = async (e) => {
     try {
-      const regis = await axios.post('http://localhost:3001/api/auth/register', formData);
+      const regis = await axios.post('backlpc-production.up.railway.app/api/auth/register', formData);
       console.log(regis.data);
       onSubmitSuccess();
       close();
