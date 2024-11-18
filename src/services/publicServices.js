@@ -1,17 +1,17 @@
 import axios from "axios";
 //produccion
-/* const baseUrl = "https://backlpc-production.up.railway.app/api/auth"; */
-/* export const SrcImagen = (path)=>{
+const baseUrl = "https://backlpc-production.up.railway.app/api/auth";
+export const SrcImagen = (path)=>{
     return `https://backlpc-production.up.railway.app${path}`
-} */
+}
 
     
 //local
-const baseUrl = "http://localhost:3001/api/auth";
+/* const baseUrl = "http://localhost:3001/api/auth"; */
 
-     export const SrcImagen = (path)=>{
+    /*  export const SrcImagen = (path)=>{
     return `http://localhost:3001${path}`
-} 
+}  */
 export const Login = (formData) => {
     return axios.post(`${baseUrl}/login`,formData);
     }

@@ -1,9 +1,9 @@
 import axios from "axios";
 
 //local
-const baseUrl = "http://localhost:3001/api/jefe";
+/* const baseUrl = "http://localhost:3001/api/jefe"; */
 
-
+const baseUrl = "https://backlpc-production.up.railway.app/api/jefe";
 export const activarPedido = (id) => {
   return axios.put(`${baseUrl}/pedido/${id}`,{},{
     headers: {

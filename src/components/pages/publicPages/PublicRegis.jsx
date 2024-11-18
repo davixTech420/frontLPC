@@ -114,7 +114,7 @@ export default function PublicRegis() {
       }
       try {
         const regis = await axios.post(
-          "http://localhost:3001/api/auth/register",
+          "https://backlpc-production.up.railway.app/api/auth/register",
           formData
         );
         window.location.href = "/loginPublic";
