@@ -1,7 +1,7 @@
 import axios from "axios";
 
 //produccion
-const baseUrl = "https://backlpc-production.up.railway.app/api/cliente";
+const baseUrl = "https://backlpc.onrender.com/api/cliente";
 
 //local
 /* const baseUrl = "http://localhost:3001/api/cliente"; */

@@ -1,8 +1,8 @@
 import axios from "axios";
 //produccion
-const baseUrl = "https://backlpc-production.up.railway.app/api/auth";
+const baseUrl = "https://backlpc.onrender.com/api/auth";
 export const SrcImagen = (path)=>{
-    return `https://backlpc-production.up.railway.app${path}`
+    return `https://backlpc.onrender.com${path}`
 }
 
     
